@@ -5,7 +5,7 @@
 
 long long FileStats::get_size(){
     file.seekg(0, std::ios::end);       //Seek to the end of the file
-    long long size = file.tellg();      //Converts current position in the file to long lonf
+    long long size = file.tellg();      //Converts current position in the file to long long
     file.seekg(0);                      //Seek back to the beginning
     return size;
 }
