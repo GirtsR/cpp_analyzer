@@ -1,3 +1,6 @@
+//
+// Created by Girts Rudziss on 14/03/2018.
+//
 #include <iostream>
 #include <fstream>
 
