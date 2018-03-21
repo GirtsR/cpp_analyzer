@@ -1,20 +1,14 @@
+//
+// Created by Girts Rudziss on 14/03/2018.
+//
 #include <iostream>
 #include <fstream>
-
-long long get_size(std::ifstream &file) {
-    file.seekg(0, std::ios::end);
-    long long size = file.tellg();
-    file.seekg(0);
-    return size;
-}
+#include "file_stats.h"
 
 int main(int argc, char *argv[]) {
-    std::ifstream file("test.cpp");
+    FileStats cur_file("test.cpp");
     std::string line;
-    if (file.is_open()) {
-        std::cout << "File size is " << get_size(file) << " bytes" << std::endl;
-    } else {
-        std::cout << "Error opening file" << std::endl;
-        return 0;
-    }
+    cur_file.check_file();
+    cur_file.print_stats();
+    return 0;
 }

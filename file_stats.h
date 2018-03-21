@@ -10,15 +10,27 @@
 class FileStats{
     std::string filename;
     std::ifstream file;
-    long long size;
-    int source_loc;
-    int comment_loc;
+    long long size = 0;
+    int source_loc = 0;
+    int comment_loc = 0;
 public:
-    FileStats(){};
+    FileStats(std::string name);
 
-    ~FileStats(){};
+    ~FileStats();
 
-    long long get_size();
+    void get_size();
+
+    std::string trim_line(std::string& line);
+
+    void multi_line_cpp(std::string& line);
+
+    void multi_line_c(std::string& line);
+
+    void check_line(std::string& line);
+
+    void check_file();
+
+    void print_stats();
 };
 
 #endif //ANALYZER_FILE_STATS_H
