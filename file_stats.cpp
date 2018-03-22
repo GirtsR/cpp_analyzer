@@ -63,12 +63,10 @@ void FileStats::multi_line_c(std::string &line) {
                 if (part2.find("//") == 0 || part2.find("/*") == 0) {
                     comment_loc--;                  //2 comments or more found in the same line - should count as one comment
                 } else if (part2.find("//") != std::string::npos || part2.find("/*") != std::string::npos) {
-                    if (!is_in_string(part2, "/*", '\"') && !is_in_string(part2, "/*", '\'') &&
-                                !is_in_string(part2, "//", '\"') && !is_in_string(part2, "//", '\'')) {     //String literal check
+                    if (!is_in_string(part2, "/*", '\"') && !is_in_string(part2, "//", '\"')) {     //String literal check
                         comment_loc--;
                         source_loc--;            //2 code blocks and 2 or more comment lines found
-                    }
-                    else {
+                    } else {
                         source_loc--;           //Only 2 or more code blocks found - should count as one
                     }
 
@@ -78,8 +76,7 @@ void FileStats::multi_line_c(std::string &line) {
         } else {
             std::string part2 = line.substr(line.find("*/") + 2);
             if (part2.find("//") != std::string::npos || part2.find("/*") != std::string::npos) {
-                if (!is_in_string(part2, "/*", '\"') && !is_in_string(part2, "/*", '\'') &&
-                    !is_in_string(part2, "//", '\"') && !is_in_string(part2, "//", '\''))
+                if (!is_in_string(part2, "/*", '\"') && !is_in_string(part2, "//", '\"'))
                     comment_loc--;                      //2 comments or more found in the same line - should count as one comment
             }
         }
@@ -88,7 +85,7 @@ void FileStats::multi_line_c(std::string &line) {
     }
 }
 
-bool FileStats::is_in_string(std::string line, std::string symbol, char quote) {          //Check if comment symbol is in a string literal (between " " or ' ')
+bool FileStats::is_in_string(std::string line, std::string symbol, char quote) {          //Check if comment symbol is in a string literal (between " ")
     size_t sympos = line.find(symbol);
     if (sympos == std::string::npos) return false;
     if (line.find_last_of(quote, sympos) < sympos) {
@@ -142,22 +139,25 @@ void FileStats::check_line(std::string &line) {
     } else if (line.find("/*") == 0) {              //Line is a C style comment
         multi_line_c(line);
     } else if (line.find("//") != std::string::npos &&
-               !(is_in_string(line, "//", '\"') || is_in_string(line, "//", '\''))) {      //C++ comment found after code
+               !(is_in_string(line, "//", '\"'))) {      //C++ comment found after code
         source_loc++;
         multi_line_cpp(line);
     } else if (line.find("/*") != std::string::npos &&
-               !(is_in_string(line, "/*", '\"') || is_in_string(line, "/*", '\''))) {       //C comment found after or between code
+               !(is_in_string(line, "/*", '\"'))) {       //C comment found after or between code
         source_loc++;
         multi_line_c(line);
-    } else {                    //Line needs to be subtracted to start after the last string literal and then checked again
+    } else {                    //Line needs to be subtracted to start after the first string literal and then checked again
         size_t cpp_pos = line.find("//");
         size_t c_pos = line.find("/*");
-        if (cpp_pos < c_pos && c_pos!=std::string::npos){
-            line = line.substr(line.find("/*")+2);
-        }
-        else {
-            line = line.substr(line.find("//")+2);
-        }
+        if (is_in_string(line, "//", '\"') && is_in_string(line, "/*", '\"')) {   //Both symbols are in string literals
+            if (c_pos < cpp_pos) {
+                line = line.substr(line.find('\"', c_pos + 1) + 1);
+            } else line = line.substr(line.find('\"', cpp_pos + 1) + 1);
+        } else if (is_in_string(line, "//", '\"')) {                //Only "//" is in a string literal
+            line = line.substr(line.find('\"', cpp_pos + 1) + 1);
+        } else if (is_in_string(line, "/*", '\"')) {                //Only "/*" is in a string literal
+            line = line.substr(line.find('\"', c_pos + 1) + 1);
+        } else return;
         check_line(line);
     }
 }
