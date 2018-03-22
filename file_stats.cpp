@@ -167,7 +167,7 @@ void FileStats::check_file() {
     std::string line;
     while (!file.eof()) {
         getline(file, line);
-        if (line.empty()) continue;         //Line is empty - not a code or comment line - can be skipped
+        if (line.empty() || line.find_first_not_of(' ') == std::string::npos) continue;         //Line is empty - not a code or comment line - can be skipped
         else {
             check_line(line);
         }
