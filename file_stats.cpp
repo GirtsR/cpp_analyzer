@@ -81,21 +81,65 @@ void FileStats::multi_line_c(std::string &line) {
 }
 
 bool FileStats::is_in_string(std::string &line, std::string symbol) {          //Check if comment symbol is in a string literal (between " " or ' ')
-    //TODO - check all cases (multiple string literals in line etc.)
+    //TODO - escaped quote characters in a string
     size_t sympos = line.find(symbol);
-    if (line.find('\"') < sympos) {
-        size_t pos1 = line.find('\"');
-        size_t pos2 = line.find('\"', pos1 + 1);
-        if (pos2 > sympos && pos2 != std::string::npos) {               //Symbol is in a string literal
-            line = line.substr(pos2 + 1);                     //Trim line to check it again
-            return true;
+    if (line.find_last_of('\"', sympos) < sympos) {
+        size_t pos1 = line.find_last_of('\"', sympos);
+        size_t pos2 = line.find('\"', sympos);
+        if (pos2 > sympos && pos2 != std::string::npos) {           //Symbol is between 2 double quotes
+            int count = 0;
+            bool between = true;
+            for (int i = 0 ; i< line.size(); i++){
+                if (line[i]=='\"') {
+                    count++;
+                    if (pos1 == i) {                   //Symbol is in a string literal if pos1 count % 2 == 1 and pos2 count % 2 == 0
+                        if (count % 2 != 1) {
+                            between = false;
+                            break;
+                        }
+                    }
+                    if (pos2 == i){
+                        if (count % 2 != 0){
+                            between = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (between){
+                line = line.substr(pos2 + 1);       //Trim line to check it again
+                return true;
+            }
+            else return false;
         }
-    } else if (line.find('\'') < sympos) {
-        size_t pos1 = line.find('\'');
-        size_t pos2 = line.find('\'', pos1 + 1);
-        if (pos2 > sympos && pos2 != std::string::npos) {              //Symbol is in a string literal
-            line = line.substr(pos2 + 1);                     //Trim line to check it again
-            return true;
+    } else if (line.find_last_of('\'', sympos) < sympos) {
+        size_t pos1 = line.find_last_of('\'', sympos);
+        size_t pos2 = line.find('\'', sympos);
+        if (pos2 > sympos && pos2 != std::string::npos) {           //Symbol is between 2 single quotes
+            int count = 0;
+            bool between = true;
+            for (int i = 0 ; i< line.size(); i++){
+                if (line[i]=='\'') {
+                    count++;
+                    if (pos1 == i) {                   //Symbol is in a string literal if pos1 count % 2 == 1 and pos2 count % 2 == 0
+                        if (count % 2 != 1) {
+                            between = false;
+                            break;
+                        }
+                    }
+                    if (pos2 == i){
+                        if (count % 2 != 0){
+                            between = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (between){
+                line = line.substr(pos2 + 1);       //Trim line to check it again
+                return true;
+            }
+            else return false;
         }
     }
     return false;
@@ -148,7 +192,3 @@ void FileStats::print_stats() {
     std::cout << "\tFile contains " << source_loc << " source lines of code." << std::endl;
     std::cout << "\tFile contains " << comment_loc << " comment lines." << std::endl;
 }
-
-
-
-
