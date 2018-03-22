@@ -32,9 +32,8 @@ std::string FileStats::trim_line(std::string &line) {
 }
 
 void FileStats::multi_line_cpp(std::string &line) {
-    //TODO - handle cases where the comment symbols are in a string literal
     comment_loc++;                               //First line is definitely a comment
-    while (line.at(line.size() - 1) == '\\') {     // The comment can be a multi-line comment, if a backslash ("\") is found at the end
+    while (line.at(line.size() - 1) == '\\') {     // The comment can be a multi-line comment, if a backslash ("\") is found at the end of the line
         comment_loc++;
         if (!file.eof()) {
             getline(file, line); //Get line if end of file has not yet been reached
@@ -44,7 +43,6 @@ void FileStats::multi_line_cpp(std::string &line) {
 }
 
 void FileStats::multi_line_c(std::string &line) {
-    //TODO - handle cases where the comment symbols are in a string literal (or a comment)
     comment_loc++;
     bool is_one_line = true;                        //Comment can be a one line comment as well - special case
     while (line.find("*/") == std::string::npos) {     // Loops until the characters "*/" are found in a line
@@ -82,6 +80,27 @@ void FileStats::multi_line_c(std::string &line) {
     }
 }
 
+bool FileStats::is_in_string(std::string &line, std::string symbol) {          //Check if comment symbol is in a string literal (between " " or ' ')
+    //TODO - check all cases (multiple string literals in line etc.)
+    size_t sympos = line.find(symbol);
+    if (line.find('\"') < sympos) {
+        size_t pos1 = line.find('\"');
+        size_t pos2 = line.find('\"', pos1 + 1);
+        if (pos2 > sympos && pos2 != std::string::npos) {               //Symbol is in a string literal
+            line = line.substr(pos2 + 1);                     //Trim line to check it again
+            return true;
+        }
+    } else if (line.find('\'') < sympos) {
+        size_t pos1 = line.find('\'');
+        size_t pos2 = line.find('\'', pos1 + 1);
+        if (pos2 > sympos && pos2 != std::string::npos) {              //Symbol is in a string literal
+            line = line.substr(pos2 + 1);                     //Trim line to check it again
+            return true;
+        }
+    }
+    return false;
+}
+
 void FileStats::check_line(std::string &line) {
     trim_line(line);
     //std::cout << line << std::endl;
@@ -93,12 +112,21 @@ void FileStats::check_line(std::string &line) {
 
     } else if (line.find("/*") == 0) {              //Line is a C style comment
         multi_line_c(line);
-    } else if (line.find("//") != std::string::npos) {         //C++ comment found after code
-        source_loc++;
-        multi_line_cpp(line);
-    } else if (line.find("/*") != std::string::npos) {         //C comment found before or after code
-        source_loc++;
-        multi_line_c(line);
+    } else if (line.find("//") != std::string::npos) {         //C++ comment symbol found after code
+        if (is_in_string(line, "//")) {             //String literal check
+            check_line(line);                       //Check second part of line again
+        } else {
+            source_loc++;
+            multi_line_cpp(line);
+        }
+    } else if (line.find("/*") != std::string::npos) {         //C comment symbol found before or after code
+        if (is_in_string(line, "/*")) {
+            check_line(line);                       //Check second part of line again
+        } else {
+            source_loc++;
+            multi_line_c(line);
+        }
+
     }
 }
 
@@ -120,6 +148,7 @@ void FileStats::print_stats() {
     std::cout << "\tFile contains " << source_loc << " source lines of code." << std::endl;
     std::cout << "\tFile contains " << comment_loc << " comment lines." << std::endl;
 }
+
 
 
 

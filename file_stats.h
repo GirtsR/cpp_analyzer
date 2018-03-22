@@ -26,11 +26,14 @@ public:
 
     void multi_line_c(std::string& line);
 
+    bool is_in_string(std::string& line, std::string symbol);
+
     void check_line(std::string& line);
 
     void check_file();
 
     void print_stats();
+
 };
 
 #endif //ANALYZER_FILE_STATS_H
