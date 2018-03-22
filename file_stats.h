@@ -26,7 +26,7 @@ public:
 
     void multi_line_c(std::string& line);
 
-    bool is_in_string(std::string& line, std::string symbol);
+    bool is_in_string(std::string& line, std::string symbol, char quote);
 
     void check_line(std::string& line);
 

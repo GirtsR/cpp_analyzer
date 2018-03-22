@@ -80,47 +80,29 @@ void FileStats::multi_line_c(std::string &line) {
     }
 }
 
-bool FileStats::is_in_string(std::string &line, std::string symbol) {          //Check if comment symbol is in a string literal (between " " or ' ')
-    //TODO - escaped quote characters in a string
+bool FileStats::is_in_string(std::string &line, std::string symbol, char quote) {          //Check if comment symbol is in a string literal (between " " or ' ')
     size_t sympos = line.find(symbol);
-    if (line.find_last_of('\"', sympos) < sympos) {
-        size_t pos1 = line.find_last_of('\"', sympos);
-        size_t pos2 = line.find('\"', sympos);
-        if (pos2 > sympos && pos2 != std::string::npos) {           //Symbol is between 2 double quotes
-            int count = 0;
-            bool between = true;
-            for (int i = 0 ; i< line.size(); i++){
-                if (line[i]=='\"') {
-                    count++;
-                    if (pos1 == i) {                   //Symbol is in a string literal if pos1 count % 2 == 1 and pos2 count % 2 == 0
-                        if (count % 2 != 1) {
-                            between = false;
-                            break;
-                        }
-                    }
-                    if (pos2 == i){
-                        if (count % 2 != 0){
-                            between = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (between){
-                line = line.substr(pos2 + 1);       //Trim line to check it again
-                return true;
+    if (line.find_last_of(quote, sympos) < sympos) {
+        size_t pos1 = line.find_last_of(quote, sympos);
+        while (line[pos1-1] == '\\') {                               //The previous character before the pos1 quote is \ - double quote is an escape character
+            if (line.find_last_of(quote, pos1-2)!=std::string::npos){
+                pos1=line.find_last_of(quote, pos1-2);
             }
             else return false;
         }
-    } else if (line.find_last_of('\'', sympos) < sympos) {
-        size_t pos1 = line.find_last_of('\'', sympos);
-        size_t pos2 = line.find('\'', sympos);
-        if (pos2 > sympos && pos2 != std::string::npos) {           //Symbol is between 2 single quotes
+        size_t pos2 = line.find(quote, sympos);
+        if (pos2 > sympos && pos2 != std::string::npos) {           //Symbol is between 2 double quotes
+            while (line[pos2-1] == '\\') {                               //The previous character before the pos2 quote is \ - double quote is an escape character
+                if (line.find(quote, pos2+1)!=std::string::npos){
+                    pos2=line.find(quote, pos1+1);
+                }
+                else return false;
+            }
             int count = 0;
             bool between = true;
             for (int i = 0 ; i< line.size(); i++){
-                if (line[i]=='\'') {
-                    count++;
+                if (line[i]==quote) {
+                    if (line[i-1]!='\\') count++;
                     if (pos1 == i) {                   //Symbol is in a string literal if pos1 count % 2 == 1 and pos2 count % 2 == 0
                         if (count % 2 != 1) {
                             between = false;
@@ -157,14 +139,14 @@ void FileStats::check_line(std::string &line) {
     } else if (line.find("/*") == 0) {              //Line is a C style comment
         multi_line_c(line);
     } else if (line.find("//") != std::string::npos) {         //C++ comment symbol found after code
-        if (is_in_string(line, "//")) {             //String literal check
+        if (is_in_string(line, "//", '\"') || is_in_string(line, "//", '\'')) {             //String literal check
             check_line(line);                       //Check second part of line again
         } else {
             source_loc++;
             multi_line_cpp(line);
         }
     } else if (line.find("/*") != std::string::npos) {         //C comment symbol found before or after code
-        if (is_in_string(line, "/*")) {
+        if (is_in_string(line, "/*", '\"') || is_in_string(line, "/*", '\'')) {
             check_line(line);                       //Check second part of line again
         } else {
             source_loc++;
