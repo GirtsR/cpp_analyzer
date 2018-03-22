@@ -58,18 +58,18 @@ void FileStats::multi_line_c(std::string &line) {
         if (is_one_line) {                               //Special case to check if a c-style comment is before or between code
             std::string part1 = line.substr(0, line.find("/*"));         //Get the first part of the line - before the start of the comment
             if (!part1.empty()) {                                    //If the first part is not empty - code appears there
-                std::string part2 = line.substr(line.find("*/") + 2);
+                std::string part2 = line.substr(line.find("*/") + 2);   //Get the second part - after the comment
                 trim_line(part2);
                 if (part2.find("//") == 0 || part2.find("/*") == 0) {
                     comment_loc--;                  //2 comments or more found in the same line - should count as one comment
                 } else if (part2.find("//") != std::string::npos || part2.find("/*") != std::string::npos) {
-                    if (is_in_string(line, "/*", '\"') || is_in_string(line, "/*", '\'') ||
-                            is_in_string(line, "//", '\"') || is_in_string(line, "//", '\'')) {     //String literal check
-                        source_loc--;           //2 code blocks found
+                    if (!is_in_string(part2, "/*", '\"') && !is_in_string(part2, "/*", '\'') &&
+                                !is_in_string(part2, "//", '\"') && !is_in_string(part2, "//", '\'')) {     //String literal check
+                        comment_loc--;
+                        source_loc--;            //2 code blocks and 2 or more comment lines found
                     }
                     else {
-                        source_loc--;            //2 code blocks, at least 2 comments found
-                        comment_loc--;
+                        source_loc--;           //Only 2 or more code blocks found - should count as one
                     }
 
                 } else source_loc--;                  //2 code blocks (e.g. "code /* comment */ code") found - should count as one source line of code
@@ -78,9 +78,9 @@ void FileStats::multi_line_c(std::string &line) {
         } else {
             std::string part2 = line.substr(line.find("*/") + 2);
             if (part2.find("//") != std::string::npos || part2.find("/*") != std::string::npos) {
-                if (!is_in_string(line, "/*", '\"') || !is_in_string(line, "/*", '\'') ||
-                    !is_in_string(line, "//", '\"') || !is_in_string(line, "//", '\''))
-                comment_loc--;                      //2 comments or more found in the same line - should count as one comment
+                if (!is_in_string(part2, "/*", '\"') && !is_in_string(part2, "/*", '\'') &&
+                    !is_in_string(part2, "//", '\"') && !is_in_string(part2, "//", '\''))
+                    comment_loc--;                      //2 comments or more found in the same line - should count as one comment
             }
         }
         line = line.substr(line.find("*/") + 2);       // Get the part of the line that follows the comment
@@ -88,8 +88,9 @@ void FileStats::multi_line_c(std::string &line) {
     }
 }
 
-bool FileStats::is_in_string(std::string &line, std::string symbol, char quote) {          //Check if comment symbol is in a string literal (between " " or ' ')
+bool FileStats::is_in_string(std::string line, std::string symbol, char quote) {          //Check if comment symbol is in a string literal (between " " or ' ')
     size_t sympos = line.find(symbol);
+    if (sympos == std::string::npos) return false;
     if (line.find_last_of(quote, sympos) < sympos) {
         size_t pos1 = line.find_last_of(quote, sympos);
         while (line[pos1 - 1] == '\\') {                             //The previous character before the pos1 quote is \ - double quote is an escaped character
@@ -123,10 +124,7 @@ bool FileStats::is_in_string(std::string &line, std::string symbol, char quote) 
                     }
                 }
             }
-            if (between) {
-                line = line.substr(pos2 + 1);       //Trim line to check it again
-                return true;
-            } else return false;
+            return between;
         }
     }
     return false;
@@ -143,21 +141,24 @@ void FileStats::check_line(std::string &line) {
 
     } else if (line.find("/*") == 0) {              //Line is a C style comment
         multi_line_c(line);
-    } else if (line.find("//") != std::string::npos) {         //C++ comment symbol found after code
-        if (is_in_string(line, "//", '\"') || is_in_string(line, "//", '\'')) {             //String literal check
-            check_line(line);                       //Check second part of line again
-        } else {
-            source_loc++;
-            multi_line_cpp(line);
+    } else if (line.find("//") != std::string::npos &&
+               !(is_in_string(line, "//", '\"') || is_in_string(line, "//", '\''))) {      //C++ comment found after code
+        source_loc++;
+        multi_line_cpp(line);
+    } else if (line.find("/*") != std::string::npos &&
+               !(is_in_string(line, "/*", '\"') || is_in_string(line, "/*", '\''))) {       //C comment found after or between code
+        source_loc++;
+        multi_line_c(line);
+    } else {                    //Line needs to be subtracted to start after the last string literal and then checked again
+        size_t cpp_pos = line.find("//");
+        size_t c_pos = line.find("/*");
+        if (cpp_pos < c_pos && c_pos!=std::string::npos){
+            line = line.substr(line.find("/*")+2);
         }
-    } else if (line.find("/*") != std::string::npos) {         //C comment symbol found before or after code
-        if (is_in_string(line, "/*", '\"') || is_in_string(line, "/*", '\'')) {
-            check_line(line);                       //Check second part of line again
-        } else {
-            source_loc++;
-            multi_line_c(line);
+        else {
+            line = line.substr(line.find("//")+2);
         }
-
+        check_line(line);
     }
 }
 
