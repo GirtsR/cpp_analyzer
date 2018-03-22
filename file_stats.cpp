@@ -63,8 +63,14 @@ void FileStats::multi_line_c(std::string &line) {
                 if (part2.find("//") == 0 || part2.find("/*") == 0) {
                     comment_loc--;                  //2 comments or more found in the same line - should count as one comment
                 } else if (part2.find("//") != std::string::npos || part2.find("/*") != std::string::npos) {
-                    source_loc--;           //2 code blocks, at least 2 comments found
-                    comment_loc--;
+                    if (is_in_string(line, "/*", '\"') || is_in_string(line, "/*", '\'') ||
+                            is_in_string(line, "//", '\"') || is_in_string(line, "//", '\'')) {     //String literal check
+                        source_loc--;           //2 code blocks found
+                    }
+                    else {
+                        source_loc--;            //2 code blocks, at least 2 comments found
+                        comment_loc--;
+                    }
 
                 } else source_loc--;                  //2 code blocks (e.g. "code /* comment */ code") found - should count as one source line of code
             }
@@ -72,6 +78,8 @@ void FileStats::multi_line_c(std::string &line) {
         } else {
             std::string part2 = line.substr(line.find("*/") + 2);
             if (part2.find("//") != std::string::npos || part2.find("/*") != std::string::npos) {
+                if (!is_in_string(line, "/*", '\"') || !is_in_string(line, "/*", '\'') ||
+                    !is_in_string(line, "//", '\"') || !is_in_string(line, "//", '\''))
                 comment_loc--;                      //2 comments or more found in the same line - should count as one comment
             }
         }
