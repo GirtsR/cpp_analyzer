@@ -3,4 +3,4 @@ project(analyzer)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(analyzer main.cpp)
+add_executable(analyzer main.cpp file_stats.h file_stats.cpp)
