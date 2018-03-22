@@ -6,6 +6,10 @@
 FileStats::FileStats(std::string name) {
     file.open(name, std::ifstream::in);
     filename = name;
+    if (!file.is_open()){
+        std::string message = "Could not open file "+filename;
+        throw std::runtime_error(message);
+    }
 }
 
 FileStats::~FileStats() {
