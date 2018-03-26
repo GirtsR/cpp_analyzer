@@ -7,31 +7,68 @@
 #ifndef ANALYZER_FILE_STATS_H
 #define ANALYZER_FILE_STATS_H
 
-class FileStats{
+class FileStats {
     std::string filename;
     std::ifstream file;
     long long size = 0;
     int source_loc = 0;
     int comment_loc = 0;
 public:
+    /**
+     * Construct a FileStats object for storing information about a file
+     * @param name
+     */
     FileStats(std::string name);
 
     ~FileStats();
 
+    /**
+     * Get size of the current file
+     */
     void get_size();
 
-    std::string trim_line(std::string& line);
+    /**
+     * Trim whitespaces from line
+     * @param line - current line extracted from the file
+     * @return line with no leading and ending whitespaces
+     */
+    std::string trim_line(std::string &line);
 
-    void multi_line_cpp(std::string& line);
+    /**
+     * Check if C++ style comment is a multiple-line comment
+     * @param line - current line with trimmed whitespaces
+     */
+    void multi_line_cpp(std::string &line);
 
-    void multi_line_c(std::string& line);
+    /**
+     * Check if C style comment is a multiple-line comment
+     * @param line - current line with trimmed whitespaces
+     */
+    void multi_line_c(std::string &line);
 
+    /**
+     * Check if the comment symbol is within a string literal
+     * @param line - current line with trimmed whitespaces
+     * @param symbol - symbol that needs to be checked ("//" or "/*")
+     * @param quote - quote style
+     * @return returns true if the comment symbol is in a string literal
+     */
     bool is_in_string(std::string line, std::string symbol, char quote);
 
-    void check_line(std::string& line);
+    /**
+     * Check current line and if it is a source or comment line
+     * @param line - current line extracted from the file
+     */
+    void check_line(std::string &line);
 
+    /**
+     * Extract and check all lines from the file
+     */
     void check_file();
 
+    /**
+     * Print statistics about the current file
+     */
     void print_stats();
 
 };
