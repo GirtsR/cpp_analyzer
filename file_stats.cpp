@@ -178,9 +178,9 @@ void FileStats::check_file() {
     }
 }
 
-void FileStats::print_stats() {
-    std::cout << "File " << filename << " statistics:" << std::endl;
-    std::cout << "\tFile size is " << size << " bytes." << std::endl;
-    std::cout << "\tFile contains " << source_loc << " source lines of code." << std::endl;
-    std::cout << "\tFile contains " << comment_loc << " comment lines." << std::endl;
+void FileStats::print_stats(std::string tabs) {
+    std::cout << tabs << "File " << filename << " statistics:" << std::endl;
+    std::cout << tabs << "\tFile size is " << size << " bytes." << std::endl;
+    std::cout << tabs << "\tFile contains " << source_loc << " source lines of code." << std::endl;
+    std::cout << tabs << "\tFile contains " << comment_loc << " comment lines." << std::endl;
 }

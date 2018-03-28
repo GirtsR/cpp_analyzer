@@ -32,7 +32,7 @@ public:
 
     void check_file();
 
-    void print_stats();
+    void print_stats(std::string tabs);
 
 };
 
