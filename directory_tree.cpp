@@ -34,10 +34,10 @@ void DirectoryTree::iterate() {
 void DirectoryTree::print_tree(std::string tabs) {
     std::cout << tabs << "Directory " << dirname << " contains: " << std::endl;
     for (auto file : files) {
-        file.print_stats(tabs+"\t");
+        file.print_stats(tabs + "\t");
     }
     for (auto dir : subdirectories) {
         std::cout << tabs << "\tSubdirectory: " << dir.dirname << std::endl;
-        dir.print_tree(tabs+"\t");
+        dir.print_tree(tabs + "\t");
     }
 }
