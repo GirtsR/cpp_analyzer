@@ -20,7 +20,7 @@ public:
 
     void get_size();
 
-    std::string trim_line(std::string& line);
+    void trim_line(std::string& line);
 
     void multi_line_cpp(std::string& line);
 
