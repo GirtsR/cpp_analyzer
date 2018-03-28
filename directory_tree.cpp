@@ -23,7 +23,7 @@ void DirectoryTree::iterate() {
         } else if (is_regular_file(x.path())) {
             std::cout << "File: " << x.path() << std::endl;
             if (x.path().extension().string() == ".cpp" || x.path().extension().string() == ".h") {
-                FileStats cur_file(x.path().filename().string());
+                FileStats cur_file(x.path().string());
                 cur_file.check_file();
                 files.push_back(cur_file);
             }
