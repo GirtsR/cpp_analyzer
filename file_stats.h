@@ -9,7 +9,7 @@
 
 class FileStats{
     std::string filename;
-    std::ifstream file;
+    std::shared_ptr<std::ifstream> file;
     long long size = 0;
     int source_loc = 0;
     int comment_loc = 0;

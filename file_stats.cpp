@@ -4,24 +4,24 @@
 #include "file_stats.h"
 
 FileStats::FileStats(std::string name) {
-    file.open(name, std::ifstream::in);
+    file = std::make_shared<std::ifstream>(name, std::ifstream::in);
     filename = name;
-    if (!file.is_open()){
+    if (!file->is_open()){
         std::string message = "Could not open file "+filename;
         throw std::runtime_error(message);
     }
 }
 
 FileStats::~FileStats() {
-    if (file.is_open()) {
-        file.close();
+    if (file->is_open()) {
+        file->close();
     }
 }
 
 void FileStats::get_size() {
-    file.seekg(0, std::ios::end);       //Seek to the end of the file
-    size = file.tellg();                //Converts size to offset of file end from the start of the file
-    file.seekg(0);                      //Seek back to the beginning
+    file->seekg(0, std::ios::end);       //Seek to the end of the file
+    size = file->tellg();                //Converts size to offset of file end from the start of the file
+    file->seekg(0);                      //Seek back to the beginning
 }
 
 std::string FileStats::trim_line(std::string &line) {
@@ -39,8 +39,8 @@ void FileStats::multi_line_cpp(std::string &line) {
     comment_loc++;                               //First line is definitely a comment
     while (line.at(line.size() - 1) == '\\') {     // The comment can be a multi-line comment, if a backslash ("\") is found at the end of the line
         comment_loc++;
-        if (!file.eof()) {
-            getline(file, line); //Get line if end of file has not yet been reached
+        if (!file->eof()) {
+            getline(*file, line); //Get line if end of file has not yet been reached
             line = trim_line(line);
         } else return;
     }
@@ -52,8 +52,8 @@ void FileStats::multi_line_c(std::string &line) {
     while (line.find("*/") == std::string::npos) {     // Loops until the characters "*/" are found in a line
         comment_loc++;
         is_one_line = false;
-        if (!file.eof()) {
-            getline(file, line);
+        if (!file->eof()) {
+            getline(*file, line);
             trim_line(line);
         } else return;
 
@@ -169,8 +169,8 @@ void FileStats::check_line(std::string &line) {
 void FileStats::check_file() {
     get_size();
     std::string line;
-    while (!file.eof()) {
-        getline(file, line);
+    while (!file->eof()) {
+        getline(*file, line);
         if (line.empty() || line.find_first_not_of(' ') == std::string::npos) continue;         //Line is empty - not a code or comment line - can be skipped
         else {
             check_line(line);
