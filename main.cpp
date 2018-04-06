@@ -2,18 +2,20 @@
 // Created by Girts Rudziss on 14/03/2018.
 //
 #include "directory_tree.h"
+#include <boost/date_time.hpp>
 
 namespace fs=boost::filesystem;
 namespace pt=boost::property_tree;
-
+namespace dt=boost::posix_time;
 int main(int argc, char *argv[]) {
 
-    if (argc < 2) {
-        std::cout << "Usage: ./analyzer [Path to project root]" << std::endl;
+    if (argc < 3) {
+        std::cout << "Usage: ./analyzer [Project name] [Path to project root]" << std::endl;
         return 0;
     }
 
-    fs::path p(argv[1]);
+    std::string project = argv[1];
+    fs::path p(argv[2]);
 
     if (exists(p)) {
         if (is_regular_file(p)) {
@@ -22,14 +24,27 @@ int main(int argc, char *argv[]) {
         } else if (is_directory(p)) {
             std::cout << p << " is a directory containing:\n";
             DirectoryTree tree(p);
-            tree.print_tree("");
+            //tree.print_tree("");
+
+            dt::ptime curTime = dt::second_clock::local_time();
+            std::string time = dt::to_iso_extended_string(curTime);
+            std::string filename = project + "-" + time + ".json";
+
+            fs::path folder = project;
+            if (!fs::exists(folder)){
+                fs::create_directory(folder);
+            }
+            else std::cout << "Folder " << project << " exists already, no need to create" << std::endl;
+
             pt::ptree root;
+            root.put("project", project);
             std::cout << "Starting JSON parse" << std::endl;
             tree.parse_property_tree(root);
-            pt::write_json(std::cout, root);
-            std::cout << "Finished!" << std::endl;
-            std::cout << "XML output" << std::endl;
-            pt::write_xml(std::cout, root, pt::xml_writer_make_settings<pt::ptree::key_type>(' ', 4));
+            pt::write_json("./" + project + "/" + filename, root);
+            std::cout << "JSON parse finished! Output file: " << filename << std::endl;
+           // std::cout << "XML output" << std::endl;
+           // pt::write_xml(std::cout, root, pt::xml_writer_make_settings<pt::ptree::key_type>(' ', 4));
+
         } else {
             std::cout << p << " exists, but is not a regular file or directory" << std::endl;
             return 0;
