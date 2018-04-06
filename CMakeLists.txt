@@ -3,4 +3,11 @@ project(analyzer)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(analyzer main.cpp file_stats.h file_stats.cpp)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
+
+add_executable(analyzer main.cpp file_stats.h file_stats.cpp directory_tree.h directory_tree.cpp)
+
+target_link_libraries(analyzer
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${Boost_SYSTEM_LIBRARY}
+        )

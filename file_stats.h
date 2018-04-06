@@ -1,15 +1,18 @@
 //
 // Created by Girts Rudziss on 19/03/2018.
 //
+#include <boost/filesystem.hpp>
 #include <iostream>
 #include <fstream>
 
+namespace fs=boost::filesystem;
 #ifndef ANALYZER_FILE_STATS_H
 #define ANALYZER_FILE_STATS_H
 
-class FileStats {
+class FileStats{
     std::string filename;
-    std::ifstream file;
+    fs::path filepath;
+    std::shared_ptr<std::ifstream> file;
     long long size = 0;
     int source_loc = 0;
     int comment_loc = 0;
@@ -18,7 +21,7 @@ public:
      * Construct a FileStats object for storing information about a file
      * @param name
      */
-    FileStats(std::string name);
+    FileStats(fs::path name);
 
     ~FileStats();
 
@@ -32,7 +35,7 @@ public:
      * @param line - current line extracted from the file
      * @return line with no leading and ending whitespaces
      */
-    std::string trim_line(std::string &line);
+    void trim_line(std::string &line);
 
     /**
      * Check if C++ style comment is a multiple-line comment
@@ -69,7 +72,7 @@ public:
     /**
      * Print statistics about the current file
      */
-    void print_stats();
+    void print_stats(std::string tabs);
 
 };
 

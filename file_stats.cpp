@@ -2,46 +2,47 @@
 // Created by Girts Rudziss on 19/03/2018.
 //
 #include "file_stats.h"
+namespace fs=boost::filesystem;
 
-FileStats::FileStats(std::string name) {
-    file.open(name, std::ifstream::in);
-    filename = name;
-    if (!file.is_open()){
-        std::string message = "Could not open file "+filename;
+FileStats::FileStats(fs::path path) {
+    filepath = path;
+    filename = path.filename().string();
+    file = std::make_shared<std::ifstream>(filepath.string(), std::ifstream::in);
+    if (!file->is_open()) {
+        std::string message = "Could not open file " + filename;
         throw std::runtime_error(message);
     }
 }
 
 FileStats::~FileStats() {
-    if (file.is_open()) {
-        file.close();
+    if (file->is_open()) {
+        file->close();
     }
 }
 
 void FileStats::get_size() {
-    file.seekg(0, std::ios::end);       //Seek to the end of the file
-    size = file.tellg();                //Converts size to offset of file end from the start of the file
-    file.seekg(0);                      //Seek back to the beginning
+    file->seekg(0, std::ios::end);       //Seek to the end of the file
+    size = file->tellg();                //Converts size to offset of file end from the start of the file
+    file->seekg(0);                      //Seek back to the beginning
 }
 
-std::string FileStats::trim_line(std::string &line) {
-    if (line.empty()) return line;      //If the line is empty - do nothing
-    while (line.at(0) == ' ') {
-        line.erase(line.begin());       //Erase leading whitespaces
+void FileStats::trim_line(std::string &line) {
+    if (line.empty()) return;      //If the line is empty - do nothing
+    while (line[0] == ' ') {
+        line.erase(0, 1);       //Erase leading whitespaces
     }
-    while (line.at(line.size() - 1) == ' ') {
-        line.erase(line.end());         //Erase ending whitespaces
+    while (line[line.size() - 1] == ' ') {
+        line.pop_back();         //Erase ending whitespaces
     }
-    return line;
 }
 
 void FileStats::multi_line_cpp(std::string &line) {
     comment_loc++;                               //First line is definitely a comment
     while (line.at(line.size() - 1) == '\\') {     // The comment can be a multi-line comment, if a backslash ("\") is found at the end of the line
         comment_loc++;
-        if (!file.eof()) {
-            getline(file, line); //Get line if end of file has not yet been reached
-            line = trim_line(line);
+        if (!file->eof()) {
+            getline(*file, line); //Get line if end of file has not yet been reached
+            trim_line(line);
         } else return;
     }
 }
@@ -52,8 +53,8 @@ void FileStats::multi_line_c(std::string &line) {
     while (line.find("*/") == std::string::npos) {     // Loops until the characters "*/" are found in a line
         comment_loc++;
         is_one_line = false;
-        if (!file.eof()) {
-            getline(file, line);
+        if (!file->eof()) {
+            getline(*file, line);
             trim_line(line);
         } else return;
 
@@ -90,20 +91,21 @@ void FileStats::multi_line_c(std::string &line) {
 }
 
 bool FileStats::is_in_string(std::string line, std::string symbol, char quote) {          //Check if comment symbol is in a string literal (between " ")
-    size_t sympos = line.find(symbol);
+    int sympos = line.find(symbol);
     if (sympos == std::string::npos) return false;
     if (line.find_last_of(quote, sympos) < sympos) {
-        size_t pos1 = line.find_last_of(quote, sympos);
+        int pos1 = line.find_last_of(quote, sympos);
         while (line[pos1 - 1] == '\\') {                             //The previous character before the pos1 quote is \ - double quote is an escaped character
             if (line.find_last_of(quote, pos1 - 2) != std::string::npos) {
                 pos1 = line.find_last_of(quote, pos1 - 2);
             } else return false;
         }
-        size_t pos2 = line.find(quote, sympos);
+        int pos2 = line.find(quote, sympos);
         if (pos2 > sympos && pos2 != std::string::npos) {           //Symbol is between 2 double quotes
             while (line[pos2 - 1] == '\\') {                    //The previous character before the pos2 quote is \ - double quote is an escaped character
-                if (line.find(quote, pos2 + 1) != std::string::npos) {
-                    pos2 = line.find(quote, pos1 + 1);
+                size_t test = line.find(quote, pos2 + 2);
+                if (line.find(quote, pos2 + 2) != std::string::npos) {
+                    pos2 = line.find(quote, pos2 + 2);
                 } else return false;
             }
             int count = 0;
@@ -167,20 +169,21 @@ void FileStats::check_line(std::string &line) {
 }
 
 void FileStats::check_file() {
-    get_size();
     std::string line;
-    while (!file.eof()) {
-        getline(file, line);
-        if (line.empty() || line.find_first_not_of(' ') == std::string::npos) continue;         //Line is empty - not a code or comment line - can be skipped
+    while (!file->eof()) {
+        getline(*file, line);
+        if (line.empty()) continue;         //Line is empty - not a code or comment line - can be skipped
         else {
             check_line(line);
         }
     }
 }
 
-void FileStats::print_stats() {
-    std::cout << "File " << filename << " statistics:" << std::endl;
-    std::cout << "\tFile size is " << size << " bytes." << std::endl;
-    std::cout << "\tFile contains " << source_loc << " source lines of code." << std::endl;
-    std::cout << "\tFile contains " << comment_loc << " comment lines." << std::endl;
+void FileStats::print_stats(std::string tabs) {
+    std::cout << tabs << "File " << filename << " statistics:" << std::endl;
+    std::cout << tabs << "\tFile size is " << size << " bytes." << std::endl;
+    if (source_loc > 0 || comment_loc > 0) {
+        std::cout << tabs << "\tFile contains " << source_loc << " source lines of code." << std::endl;
+        std::cout << tabs << "\tFile contains " << comment_loc << " comment lines." << std::endl;
+    }
 }
