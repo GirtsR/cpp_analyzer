@@ -4,6 +4,7 @@
 #include "directory_tree.h"
 
 namespace fs=boost::filesystem;
+namespace pt=boost::property_tree;
 
 DirectoryTree::DirectoryTree(fs::path path) {
     dirpath = path;
@@ -43,5 +44,36 @@ void DirectoryTree::print_tree(std::string tabs) {
     for (auto dir : subdirectories) {
         std::cout << tabs << "\tSubdirectory: " << dir.dirname << std::endl;
         dir.print_tree(tabs + "\t");
+    }
+}
+
+void DirectoryTree::parse_property_tree(pt::ptree &root) {
+    root.put("directory", dirname);
+
+    pt::ptree files_node;
+    for (auto file : files) {
+        pt::ptree file_node;
+        file_node.put("filename", file.return_filename());
+        file_node.put("size", file.return_size());
+        if (file.return_sloc() > 0 || file.return_cloc() > 0) {
+            file_node.put("source_loc", file.return_sloc());
+            file_node.put("comment_loc", file.return_cloc());
+        }
+
+        files_node.push_back(std::make_pair("", file_node));
+    }
+    if (!files_node.empty()) {
+        root.add_child("files", files_node);
+    }
+
+    pt::ptree subdirectories_node;
+    for (auto dir : subdirectories) {
+        pt::ptree subdirectory_node;
+        dir.parse_property_tree(subdirectory_node);
+
+        subdirectories_node.push_back(std::make_pair("", subdirectory_node));
+    }
+    if (!subdirectories_node.empty()) {
+        root.add_child("subdirectories", subdirectories_node);
     }
 }

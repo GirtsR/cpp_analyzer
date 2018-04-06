@@ -2,8 +2,12 @@
 // Created by Girts Rudziss on 22/03/2018.
 //
 #include "file_stats.h"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 
 namespace fs=boost::filesystem;
+namespace pt=boost::property_tree;
 #ifndef ANALYZER_DIRECTORY_TREE_H
 #define ANALYZER_DIRECTORY_TREE_H
 
@@ -34,6 +38,11 @@ public:
      */
     void print_tree(std::string tabs);
 
+    /**
+     * Parse DirectoryTree object to Boost Property tree
+     * @param root - reference to Property tree root
+     */
+    void parse_property_tree(pt::ptree &root);
 };
 
 #endif //ANALYZER_DIRECTORY_TREE_H

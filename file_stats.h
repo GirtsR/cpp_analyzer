@@ -75,6 +75,13 @@ public:
      */
     void print_stats(std::string tabs);
 
+    std::string return_filename();
+
+    long long return_size();
+
+    int return_sloc();
+
+    int return_cloc();
 };
 
 #endif //ANALYZER_FILE_STATS_H

@@ -187,3 +187,19 @@ void FileStats::print_stats(std::string tabs) {
         std::cout << tabs << "\tFile contains " << comment_loc << " comment lines." << std::endl;
     }
 }
+
+std::string FileStats::return_filename() {
+    return this->filename;
+}
+
+long long FileStats::return_size() {
+    return this->size;
+}
+
+int FileStats::return_sloc() {
+    return this->source_loc;
+}
+
+int FileStats::return_cloc() {
+    return this->comment_loc;
+}
