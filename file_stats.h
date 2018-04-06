@@ -19,7 +19,7 @@ class FileStats{
 public:
     /**
      * Construct a FileStats object for storing information about a file
-     * @param name
+     * @param name - Boost.Filesystem path to file
      */
     FileStats(fs::path name);
 
@@ -71,6 +71,7 @@ public:
 
     /**
      * Print statistics about the current file
+     * @param tabs - indentation in std::cout
      */
     void print_stats(std::string tabs);
 
