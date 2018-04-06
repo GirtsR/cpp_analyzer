@@ -47,9 +47,10 @@ void DirectoryTree::print_tree(std::string tabs) {
     }
 }
 
-void DirectoryTree::parse_property_tree(pt::ptree &root) {
-    root.put("directory", dirname);
-
+void DirectoryTree::parse_property_tree(pt::ptree &root, bool isfirst) {
+    if (!isfirst) {
+        root.add("directory", dirname);     //Only add directory if the folder is not the root dir of the project (project name was added already)
+    }
     pt::ptree files_node;
     for (auto file : files) {
         pt::ptree file_node;
@@ -69,7 +70,7 @@ void DirectoryTree::parse_property_tree(pt::ptree &root) {
     pt::ptree subdirectories_node;
     for (auto dir : subdirectories) {
         pt::ptree subdirectory_node;
-        dir.parse_property_tree(subdirectory_node);
+        dir.parse_property_tree(subdirectory_node, false);
 
         subdirectories_node.push_back(std::make_pair("", subdirectory_node));
     }

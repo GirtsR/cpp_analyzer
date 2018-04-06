@@ -41,8 +41,9 @@ public:
     /**
      * Parse DirectoryTree object to Boost Property tree
      * @param root - reference to Property tree root
+     * @param isfirst - true if passed first time (root directory, directory name will not be added to Property tree)
      */
-    void parse_property_tree(pt::ptree &root);
+    void parse_property_tree(pt::ptree &root, bool isfirst);
 };
 
 #endif //ANALYZER_DIRECTORY_TREE_H

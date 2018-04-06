@@ -46,11 +46,11 @@ int main(int argc, char *argv[]) {
             pt::ptree root;
             root.put("project", project);
             std::cout << "Starting JSON parse" << std::endl;
-            tree.parse_property_tree(root);
+            tree.parse_property_tree(root, true);
             pt::write_json("./" + project + "/" + filename, root);
             std::cout << "JSON parse finished! Output file: " << filename << std::endl;
             // std::cout << "XML output" << std::endl;
-            // pt::write_xml(std::cout, root, pt::xml_writer_make_settings<pt::ptree::key_type>(' ', 4));
+             pt::write_xml(std::cout, root, pt::xml_writer_make_settings<pt::ptree::key_type>(' ', 4));
 
         } else {
             std::cout << p << " exists, but is not a regular file or directory" << std::endl;
