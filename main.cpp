@@ -7,6 +7,7 @@
 namespace fs=boost::filesystem;
 namespace pt=boost::property_tree;
 namespace dt=boost::posix_time;
+
 int main(int argc, char *argv[]) {
 
     if (argc < 3) {
@@ -30,11 +31,17 @@ int main(int argc, char *argv[]) {
             std::string time = dt::to_iso_extended_string(curTime);
             std::string filename = project + "-" + time + ".json";
 
+            //TODO - check for exceptions and errors
             fs::path folder = project;
-            if (!fs::exists(folder)){
-                fs::create_directory(folder);
-            }
-            else std::cout << "Folder " << project << " exists already, no need to create" << std::endl;
+            if (!fs::exists(folder)) {
+                if (fs::create_directory(folder)) {
+                    std::cout << "Folder " << folder << " created successfully!" << std::endl;
+                } else {
+                    std::cout << "Folder could not be created! Please check the project name specified is valid"
+                            " or if administrator privileges are needed" << std::endl;
+                    return 0;
+                }
+            } else std::cout << "Folder " << folder << " exists already, no need to create" << std::endl;
 
             pt::ptree root;
             root.put("project", project);
@@ -42,8 +49,8 @@ int main(int argc, char *argv[]) {
             tree.parse_property_tree(root);
             pt::write_json("./" + project + "/" + filename, root);
             std::cout << "JSON parse finished! Output file: " << filename << std::endl;
-           // std::cout << "XML output" << std::endl;
-           // pt::write_xml(std::cout, root, pt::xml_writer_make_settings<pt::ptree::key_type>(' ', 4));
+            // std::cout << "XML output" << std::endl;
+            // pt::write_xml(std::cout, root, pt::xml_writer_make_settings<pt::ptree::key_type>(' ', 4));
 
         } else {
             std::cout << p << " exists, but is not a regular file or directory" << std::endl;
