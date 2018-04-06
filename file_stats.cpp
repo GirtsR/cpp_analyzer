@@ -2,10 +2,12 @@
 // Created by Girts Rudziss on 19/03/2018.
 //
 #include "file_stats.h"
+namespace fs=boost::filesystem;
 
-FileStats::FileStats(std::string name) {
-    file = std::make_shared<std::ifstream>(name, std::ifstream::in);
-    filename = name;
+FileStats::FileStats(fs::path path) {
+    filepath = path;
+    filename = path.filename().string();
+    file = std::make_shared<std::ifstream>(filepath.string(), std::ifstream::in);
     if (!file->is_open()) {
         std::string message = "Could not open file " + filename;
         throw std::runtime_error(message);
@@ -167,7 +169,6 @@ void FileStats::check_line(std::string &line) {
 }
 
 void FileStats::check_file() {
-    get_size();
     std::string line;
     while (!file->eof()) {
         getline(*file, line);
@@ -181,6 +182,8 @@ void FileStats::check_file() {
 void FileStats::print_stats(std::string tabs) {
     std::cout << tabs << "File " << filename << " statistics:" << std::endl;
     std::cout << tabs << "\tFile size is " << size << " bytes." << std::endl;
-    std::cout << tabs << "\tFile contains " << source_loc << " source lines of code." << std::endl;
-    std::cout << tabs << "\tFile contains " << comment_loc << " comment lines." << std::endl;
+    if (source_loc > 0 || comment_loc > 0) {
+        std::cout << tabs << "\tFile contains " << source_loc << " source lines of code." << std::endl;
+        std::cout << tabs << "\tFile contains " << comment_loc << " comment lines." << std::endl;
+    }
 }

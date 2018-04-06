@@ -1,7 +1,6 @@
 //
 // Created by Girts Rudziss on 22/03/2018.
 //
-#include <boost/filesystem.hpp>
 #include "file_stats.h"
 
 namespace fs=boost::filesystem;
@@ -13,6 +12,8 @@ class DirectoryTree {
     std::string dirname;
     std::vector<FileStats> files;
     std::vector<DirectoryTree> subdirectories;
+    std::string extensions[7] = {".cpp", ".cc", ".cxx", ".cc",
+                                 ".h", ".hh", ".hpp"};
 public:
     DirectoryTree(fs::path path);
 

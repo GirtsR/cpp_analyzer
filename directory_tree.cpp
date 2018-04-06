@@ -18,15 +18,19 @@ DirectoryTree::~DirectoryTree() {
 void DirectoryTree::iterate() {
     for (fs::directory_entry &x : fs::directory_iterator(dirpath)) {
         if (is_directory(x.path())) {
-            std::cout << "Folder " << x.path() << std::endl;
-            subdirectories.push_back(DirectoryTree(x.path()));
+            if (x.path().filename().string()[0] != '.') {           //Check if folder is not hidden
+                std::cout << "Folder " << x.path() << std::endl;
+                subdirectories.push_back(DirectoryTree(x.path()));
+            }
         } else if (is_regular_file(x.path())) {
             std::cout << "File: " << x.path() << std::endl;
-            if (x.path().extension().string() == ".cpp" || x.path().extension().string() == ".h") {
-                FileStats cur_file(x.path().string());
-                cur_file.check_file();
-                files.push_back(cur_file);
+            FileStats cur_file(x.path().string());
+            cur_file.get_size();
+            if (std::find(std::begin(extensions), std::end(extensions), x.path().extension().string()) !=
+                std::end(extensions)) {                 //If file is a C++ source code file
+                cur_file.check_file();                  //Check how many SLOC and CLOC there are
             }
+            files.push_back(cur_file);
         }
     }
 }
