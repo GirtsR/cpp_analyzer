@@ -21,12 +21,14 @@ void DirectoryTree::iterate() {
         if (is_directory(x.path())) {
             if (x.path().filename().string()[0] != '.') {           //Check if folder is not hidden
                 std::cout << "Folder " << x.path() << std::endl;
-                subdirectories.push_back(DirectoryTree(x.path()));
+                DirectoryTree subdir(x.path());
+                subdirectories.push_back(subdir);
+                dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
             }
         } else if (is_regular_file(x.path())) {
             std::cout << "File: " << x.path() << std::endl;
             FileStats cur_file(x.path().string());
-            cur_file.get_size();
+            dirsize += cur_file.get_size();             //Get file size and add to total
             if (std::find(std::begin(extensions), std::end(extensions), x.path().extension().string()) !=
                 std::end(extensions)) {                 //If file is a C++ source code file
                 cur_file.check_file();                  //Check how many SLOC and CLOC there are
@@ -37,7 +39,7 @@ void DirectoryTree::iterate() {
 }
 
 void DirectoryTree::print_tree(std::string tabs) {
-    std::cout << tabs << "Directory " << dirname << " contains: " << std::endl;
+    std::cout << tabs << "Directory " << dirname << " size: " << dirsize << std::endl;
     for (auto file : files) {
         file.print_stats(tabs + "\t");
     }
@@ -50,6 +52,7 @@ void DirectoryTree::print_tree(std::string tabs) {
 void DirectoryTree::parse_property_tree(pt::ptree &root, bool isfirst) {
     if (!isfirst) {
         root.add("directory", dirname);     //Only add directory if the folder is not the root dir of the project (project name was added already)
+        root.add("size", dirsize);
     }
     pt::ptree files_node;
     for (auto file : files) {
@@ -77,4 +80,8 @@ void DirectoryTree::parse_property_tree(pt::ptree &root, bool isfirst) {
     if (!subdirectories_node.empty()) {
         root.add_child("subdirectories", subdirectories_node);
     }
+}
+
+unsigned long long DirectoryTree::return_dirsize() {
+    return this->dirsize;
 }

@@ -20,10 +20,11 @@ FileStats::~FileStats() {
     }
 }
 
-void FileStats::get_size() {
+long long FileStats::get_size() {
     file->seekg(0, std::ios::end);       //Seek to the end of the file
     size = file->tellg();                //Converts size to offset of file end from the start of the file
     file->seekg(0);                      //Seek back to the beginning
+    return size;
 }
 
 void FileStats::trim_line(std::string &line) {

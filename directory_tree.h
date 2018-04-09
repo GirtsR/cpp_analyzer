@@ -18,6 +18,7 @@ class DirectoryTree {
     std::vector<DirectoryTree> subdirectories;
     std::string extensions[7] = {".cpp", ".cc", ".cxx", ".cc",
                                  ".h", ".hh", ".hpp"};
+    unsigned long long dirsize = 0;
 public:
     /**
      * Construct a DirectoryTree object for storing its files and subdirectories
@@ -44,6 +45,8 @@ public:
      * @param isfirst - true if passed first time (root directory, directory name will not be added to Property tree)
      */
     void parse_property_tree(pt::ptree &root, bool isfirst);
+
+    unsigned long long return_dirsize();
 };
 
 #endif //ANALYZER_DIRECTORY_TREE_H

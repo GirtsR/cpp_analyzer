@@ -13,7 +13,7 @@ class FileStats{
     std::string filename;
     fs::path filepath;
     std::shared_ptr<std::ifstream> file;
-    long long size = 0;
+    unsigned long long size = 0;
     int source_loc = 0;
     int comment_loc = 0;
 public:
@@ -27,8 +27,9 @@ public:
 
     /**
      * Get size of the current file
+     * @return size of the file
      */
-    void get_size();
+    long long get_size();
 
     /**
      * Trim whitespaces from line
