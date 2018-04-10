@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
             //tree.print_tree("");
 
             dt::ptime curTime = dt::second_clock::local_time();
-            std::string time = dt::to_iso_extended_string(curTime);
+            std::string time = dt::to_iso_string(curTime);
             std::string filename = project + "-" + time + ".json";
 
             //TODO - check for exceptions and errors
