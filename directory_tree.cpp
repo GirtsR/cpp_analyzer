@@ -19,12 +19,10 @@ DirectoryTree::~DirectoryTree() {
 void DirectoryTree::iterate() {
     for (fs::directory_entry &x : fs::directory_iterator(dirpath)) {
         if (is_directory(x.path())) {
-            if (x.path().filename().string()[0] != '.') {           //Check if folder is not hidden
                 std::cout << "Folder " << x.path() << std::endl;
                 DirectoryTree subdir(x.path());
                 subdirectories.push_back(subdir);
                 dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
-            }
         } else if (is_regular_file(x.path())) {
             std::cout << "File: " << x.path() << std::endl;
             FileStats cur_file(x.path().string());
