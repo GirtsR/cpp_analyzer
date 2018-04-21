@@ -46,6 +46,12 @@ public:
      */
     void parse_property_tree(pt::ptree &root, bool isfirst);
 
+    /**
+     * Add size of previous file versions from the previous .json files
+     * @param root - reference to Property tree root
+     */
+    void add_history(pt::ptree &root, std::string project);
+
     unsigned long long return_dirsize();
 };
 

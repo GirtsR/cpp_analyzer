@@ -48,6 +48,7 @@ int main(int argc, char *argv[]) {
             root.put("totalsize", tree.return_dirsize());
             std::cout << "Starting JSON parse" << std::endl;
             tree.parse_property_tree(root, true);
+            tree.add_history(root, project);
             pt::write_json("./" + project + "/" + filename, root);
             std::cout << "JSON parse finished! Output file: " << filename << std::endl;
             // std::cout << "XML output" << std::endl;

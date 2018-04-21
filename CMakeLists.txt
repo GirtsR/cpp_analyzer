@@ -3,11 +3,10 @@ project(analyzer)
 
 set(CMAKE_CXX_STANDARD 17)
 
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0y")
+
 find_package(Boost COMPONENTS system filesystem date_time REQUIRED)
 
 add_executable(analyzer main.cpp file_stats.h file_stats.cpp directory_tree.h directory_tree.cpp)
 
-target_link_libraries(analyzer
-        ${Boost_FILESYSTEM_LIBRARY}
-        ${Boost_SYSTEM_LIBRARY}
-        ${Boost_DATE_TIME_LIBRARY})
+target_link_libraries(analyzer ${Boost_LIBRARIES})
