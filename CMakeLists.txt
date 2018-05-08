@@ -3,7 +3,7 @@ project(analyzer)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Boost COMPONENTS system filesystem date_time REQUIRED)
+find_package(Boost COMPONENTS system filesystem date_time unit_test_framework REQUIRED)
 
 add_executable(analyzer main.cpp file_stats.h file_stats.cpp directory_tree.h directory_tree.cpp)
 
