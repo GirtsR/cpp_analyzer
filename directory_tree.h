@@ -19,6 +19,8 @@ class DirectoryTree {
     std::string extensions[7] = {".cpp", ".cc", ".cxx", ".cc",
                                  ".h", ".hh", ".hpp"};
     unsigned long long dirsize = 0;
+    unsigned long long total_sloc = 0;
+    unsigned long long total_cloc = 0;
 public:
     /**
      * Construct a DirectoryTree object for storing its files and subdirectories
@@ -53,6 +55,10 @@ public:
     void add_history(pt::ptree &root, std::string project);
 
     unsigned long long return_dirsize();
+
+    unsigned long long return_total_sloc();
+
+    unsigned long long return_total_cloc();
 };
 
 #endif //ANALYZER_DIRECTORY_TREE_H

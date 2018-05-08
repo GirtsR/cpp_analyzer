@@ -46,6 +46,8 @@ int main(int argc, char *argv[]) {
             pt::ptree root;
             root.put("project", project);
             root.put("totalsize", tree.return_dirsize());
+            root.add("totalsloc", tree.return_total_sloc());
+            root.add("totalcloc", tree.return_total_cloc());
             root.put("unit", "bytes");
             std::cout << "Starting JSON parse" << std::endl;
             tree.parse_property_tree(root, true);

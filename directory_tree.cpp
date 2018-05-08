@@ -23,6 +23,8 @@ void DirectoryTree::iterate() {
                 DirectoryTree subdir(x.path());
                 subdirectories.push_back(subdir);
                 dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
+                total_sloc += subdir.return_total_sloc();
+                total_cloc += subdir.return_total_cloc();
         } else if (is_regular_file(x.path())) {
             std::cout << "File: " << x.path() << std::endl;
             FileStats cur_file(x.path().string());
@@ -30,6 +32,8 @@ void DirectoryTree::iterate() {
             if (std::find(std::begin(extensions), std::end(extensions), x.path().extension().string()) !=
                 std::end(extensions)) {                 //If file is a C++ source code file
                 cur_file.check_file();                  //Check how many SLOC and CLOC there are
+                total_sloc += cur_file.return_sloc();
+                total_cloc += cur_file.return_cloc();
             }
             files.push_back(cur_file);
         }
@@ -51,6 +55,8 @@ void DirectoryTree::parse_property_tree(pt::ptree &root, bool isfirst) {
     if (!isfirst) {
         root.add("directory", dirname);     //Only add directory if the folder is not the root dir of the project (project name was added already)
         root.add("size", dirsize);
+        root.add("total_sloc", total_sloc);
+        root.add("total_cloc", total_cloc);
     }
     pt::ptree files_node;
     for (auto file : files) {
@@ -115,4 +121,12 @@ void DirectoryTree::add_history(pt::ptree &root, std::string project) {
 
 unsigned long long DirectoryTree::return_dirsize() {
     return this->dirsize;
+}
+
+unsigned long long DirectoryTree::return_total_sloc() {
+    return this->total_sloc;
+}
+
+unsigned long long DirectoryTree::return_total_cloc() {
+    return this->total_cloc;
 }
