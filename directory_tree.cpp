@@ -19,12 +19,10 @@ DirectoryTree::~DirectoryTree() {
 void DirectoryTree::iterate() {
     for (fs::directory_entry &x : fs::directory_iterator(dirpath)) {
         if (is_directory(x.path())) {
-            if (x.path().filename().string()[0] != '.') {           //Check if folder is not hidden
                 std::cout << "Folder " << x.path() << std::endl;
                 DirectoryTree subdir(x.path());
                 subdirectories.push_back(subdir);
                 dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
-            }
         } else if (is_regular_file(x.path())) {
             std::cout << "File: " << x.path() << std::endl;
             FileStats cur_file(x.path().string());
@@ -81,6 +79,39 @@ void DirectoryTree::parse_property_tree(pt::ptree &root, bool isfirst) {
         root.add_child("subdirectories", subdirectories_node);
     }
 }
+
+void DirectoryTree::add_history(pt::ptree &root, std::string project) {
+    fs::path json_dir(project);
+    std::vector<fs::path> files;
+    for (fs::directory_entry &x : fs::directory_iterator(json_dir)) {
+        if (is_regular_file(x.path()) && x.path().extension().string() == ".json") {
+            fs::path file(x.path());
+            std::cout << "Found JSON file: " << file.filename() << std::endl;
+            files.push_back(file);                  //Add all old JSON files to vector
+        }
+        std::sort(files.begin(), files.end());      //Sort by filename
+    }
+    pt::ptree history_node;
+    std::cout << files.size() << std::endl;
+    if (!files.empty()) {
+        std::cout << "Latest JSON file: " << files.back() << std::endl;
+        fs::path file(files.back().relative_path());    //Get newest JSON file found
+        pt::ptree history;
+        pt::read_json(file.string(), history);      //Read data from the JSON file
+        for (auto& val : history.get_child("history.")) {                   //Get each element of history array
+            pt::ptree old_node;
+            old_node.add("size", val.second.get_child("size").data());  //Get data of size field
+            history_node.push_back(std::make_pair("", old_node));     //Put in the new property tree
+        }
+    } else {
+        std::cout << "No project history found" << std::endl;
+    }
+    pt::ptree new_node;
+    new_node.put("size", this->dirsize);        //Put current size
+    history_node.push_back(std::make_pair("", new_node));
+    root.add_child("history", history_node);
+}
+
 
 unsigned long long DirectoryTree::return_dirsize() {
     return this->dirsize;
