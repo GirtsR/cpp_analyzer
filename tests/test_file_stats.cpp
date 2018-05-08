@@ -79,3 +79,8 @@ BOOST_AUTO_TEST_CASE(filename_special_chars)
     BOOST_CHECK_EQUAL(file.return_sloc(), 0);
     BOOST_CHECK_EQUAL(file.return_cloc(), 3);
 }
+
+BOOST_AUTO_TEST_CASE(could_not_open_exception)
+{
+    BOOST_CHECK_THROW(FileStats file(fs::path("")), std::runtime_error);        //Checks if runtime error is thrown in the constructor
+}
