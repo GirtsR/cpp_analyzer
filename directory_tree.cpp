@@ -19,13 +19,13 @@ DirectoryTree::~DirectoryTree() {
 void DirectoryTree::iterate() {
     for (fs::directory_entry &x : fs::directory_iterator(dirpath)) {
         if (is_directory(x.path())) {
-                std::cout << "Folder " << x.path() << std::endl;
-                DirectoryTree subdir(x.path());
-                subdirectories.push_back(subdir);
-                dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
-                total_sloc += subdir.return_total_sloc();
-                total_cloc += subdir.return_total_cloc();
-        } else if (is_regular_file(x.path())) {
+            std::cout << "Folder " << x.path() << std::endl;
+            DirectoryTree subdir(x.path());
+            subdirectories.push_back(subdir);
+            dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
+            total_sloc += subdir.return_total_sloc();
+            total_cloc += subdir.return_total_cloc();
+        } else if (is_regular_file(x.path()) && x.path().filename().string()[0] != '.') {  //File found which is not hidden
             std::cout << "File: " << x.path() << std::endl;
             FileStats cur_file(x.path().string());
             dirsize += cur_file.get_size();             //Get file size and add to total
@@ -104,7 +104,7 @@ void DirectoryTree::add_history(pt::ptree &root, std::string project) {
         fs::path file(files.back().relative_path());    //Get newest JSON file found
         pt::ptree history;
         pt::read_json(file.string(), history);      //Read data from the JSON file
-        for (auto& val : history.get_child("history.")) {                   //Get each element of history array
+        for (auto &val : history.get_child("history.")) {                   //Get each element of history array
             pt::ptree old_node;
             old_node.add("size", val.second.get_child("size").data());  //Get data of size field
             history_node.push_back(std::make_pair("", old_node));     //Put in the new property tree

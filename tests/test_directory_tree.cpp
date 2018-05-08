@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(bbb_dir)
 BOOST_AUTO_TEST_CASE(aaa_dir)
 {
     DirectoryTree tree(fs::path("../tests/testdir/aaa"));
-    BOOST_CHECK_EQUAL(tree.return_dirsize(), 6532);
+    BOOST_CHECK_EQUAL(tree.return_dirsize(), 384);
     BOOST_CHECK_EQUAL(tree.return_total_sloc(), 8);
     BOOST_CHECK_EQUAL(tree.return_total_cloc(), 13);
 }
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(empty_dir)
 BOOST_AUTO_TEST_CASE(testdir)
 {
     DirectoryTree tree(fs::path("../tests/testdir"));
-    BOOST_CHECK_EQUAL(tree.return_dirsize(), 48426);
+    BOOST_CHECK_EQUAL(tree.return_dirsize(), 36130);
     BOOST_CHECK_EQUAL(tree.return_total_sloc(), 708);
     BOOST_CHECK_EQUAL(tree.return_total_cloc(), 717);
 }
