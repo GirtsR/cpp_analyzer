@@ -10,7 +10,7 @@ namespace fs = boost::filesystem;
 
 BOOST_AUTO_TEST_CASE(empty_file)
 {
-    FileStats file(fs::path("../unit_tests/testdir/empty.cpp"));
+    FileStats file(fs::path("../tests/testdir/empty.cpp"));
     file.get_size();
     file.check_file();
 
@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(empty_file)
 
 BOOST_AUTO_TEST_CASE(mixed_file)
 {
-    FileStats file(fs::path("../unit_tests/testdir/aaa/mixed_file.cpp"));
+    FileStats file(fs::path("../tests/testdir/aaa/mixed_file.cpp"));
     file.get_size();
     file.check_file();
 
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(mixed_file)
 
 BOOST_AUTO_TEST_CASE(source_only)
 {
-    FileStats file(fs::path("../unit_tests/testdir/aaa/bbb/source_only.cpp"));
+    FileStats file(fs::path("../tests/testdir/aaa/bbb/source_only.cpp"));
     file.get_size();
     file.check_file();
 
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(source_only)
 
 BOOST_AUTO_TEST_CASE(comment_only)
 {
-    FileStats file(fs::path("../unit_tests/testdir/aaa/ccc/comment_only.cpp"));
+    FileStats file(fs::path("../tests/testdir/aaa/ccc/comment_only.cpp"));
     file.get_size();
     file.check_file();
 
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(comment_only)
 
 BOOST_AUTO_TEST_CASE(large_file)
 {
-    FileStats file(fs::path("../unit_tests/testdir/large_file.cpp"));
+    FileStats file(fs::path("../tests/testdir/large_file.cpp"));
     file.get_size();
     file.check_file();
 
