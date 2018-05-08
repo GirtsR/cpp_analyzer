@@ -2,7 +2,7 @@
 // Created by Girts Rudziss on 08/05/2018.
 //
 #define BOOST_TEST_DYN_LINK                 //Link to Boost
-#define BOOST_TEST_MODULE "FileStatsTests" //Module name (prints at testing)
+#define BOOST_TEST_MODULE "FileStatsTests" //Module name
 
 #include <boost/test/unit_test.hpp>
 #include "../file_stats.h"
@@ -54,4 +54,16 @@ BOOST_AUTO_TEST_CASE(comment_only)
     BOOST_CHECK_EQUAL(file.return_size(), 18);
     BOOST_CHECK_EQUAL(file.return_sloc(), 0);
     BOOST_CHECK_EQUAL(file.return_cloc(), 6);
+}
+
+BOOST_AUTO_TEST_CASE(large_file)
+{
+    FileStats file(fs::path("../unit_tests/testdir/large_file.cpp"));
+    file.get_size();
+    file.check_file();
+
+    BOOST_CHECK_EQUAL(file.return_filename(), "large_file.cpp");
+    BOOST_CHECK_EQUAL(file.return_size(), 35697);
+    BOOST_CHECK_EQUAL(file.return_sloc(), 700);
+    BOOST_CHECK_EQUAL(file.return_cloc(), 701);
 }
