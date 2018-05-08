@@ -67,3 +67,15 @@ BOOST_AUTO_TEST_CASE(large_file)
     BOOST_CHECK_EQUAL(file.return_sloc(), 700);
     BOOST_CHECK_EQUAL(file.return_cloc(), 701);
 }
+
+BOOST_AUTO_TEST_CASE(filename_special_chars)
+{
+    FileStats file(fs::path("../tests/testdir/test-#!@£$%^&*()_+\":;'.h"));
+    file.get_size();
+    file.check_file();
+
+    BOOST_CHECK_EQUAL(file.return_filename(), "test-#!@£$%^&*()_+\":;'.h");
+    BOOST_CHECK_EQUAL(file.return_size(), 49);
+    BOOST_CHECK_EQUAL(file.return_sloc(), 0);
+    BOOST_CHECK_EQUAL(file.return_cloc(), 3);
+}
