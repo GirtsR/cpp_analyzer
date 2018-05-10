@@ -37,7 +37,7 @@ public:
 
     /**
      * Print DirectoryTree, its files un subdirectories
-     * @param tabs - indentation if std::cout
+     * @param tabs - indentation of std::cout
      */
     void print_tree(std::string tabs);
 
