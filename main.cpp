@@ -3,6 +3,7 @@
 //
 #include "directory_tree.h"
 #include <boost/date_time.hpp>
+#include "html_generator.h"
 
 namespace fs=boost::filesystem;
 namespace pt=boost::property_tree;
@@ -59,6 +60,8 @@ int main(int argc, char *argv[]) {
             // std::cout << "XML output" << std::endl;
             // pt::write_xml(std::cout, root, pt::xml_writer_make_settings<pt::ptree::key_type>(' ', 4));
 
+            //TODO - generate report using root property tree
+            generate_report(root);
         } else {
             std::cout << p << " exists, but is not a regular file or directory" << std::endl;
             return 1;
