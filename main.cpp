@@ -10,13 +10,14 @@ namespace dt=boost::posix_time;
 
 int main(int argc, char *argv[]) {
 
-    if (argc < 3) {
-        std::cout << "Usage: ./analyzer [Project name] [Path to project root]" << std::endl;
+    if (argc < 4) {
+        std::cout << "Usage: ./analyzer [Project name] [Path to project root] [Project version]" << std::endl;
         return 1;
     }
 
     std::string project = argv[1];
     fs::path p(argv[2]);
+    std::string version = argv[3];
 
     if (exists(p)) {
         if (is_regular_file(p)) {
@@ -45,11 +46,14 @@ int main(int argc, char *argv[]) {
 
             pt::ptree root;
             root.put("project", project);
+            root.put("version", version);
             root.put("totalsize", tree.return_dirsize());
+            root.add("totalsloc", tree.return_total_sloc());
+            root.add("totalcloc", tree.return_total_cloc());
             root.put("unit", "bytes");
             std::cout << "Starting JSON parse" << std::endl;
             tree.parse_property_tree(root, true);
-            tree.add_history(root, project);
+            tree.add_history(root, project, version);
             pt::write_json("./" + project + "/" + filename, root);
             std::cout << "JSON parse finished! Output file: " << filename << std::endl;
             // std::cout << "XML output" << std::endl;

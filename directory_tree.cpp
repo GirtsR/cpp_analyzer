@@ -19,17 +19,21 @@ DirectoryTree::~DirectoryTree() {
 void DirectoryTree::iterate() {
     for (fs::directory_entry &x : fs::directory_iterator(dirpath)) {
         if (is_directory(x.path())) {
-                std::cout << "Folder " << x.path() << std::endl;
-                DirectoryTree subdir(x.path());
-                subdirectories.push_back(subdir);
-                dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
-        } else if (is_regular_file(x.path())) {
+            std::cout << "Folder " << x.path() << std::endl;
+            DirectoryTree subdir(x.path());
+            subdirectories.push_back(subdir);
+            dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
+            total_sloc += subdir.return_total_sloc();
+            total_cloc += subdir.return_total_cloc();
+        } else if (is_regular_file(x.path()) && x.path().filename().string()[0] != '.') {  //File found which is not hidden
             std::cout << "File: " << x.path() << std::endl;
             FileStats cur_file(x.path().string());
             dirsize += cur_file.get_size();             //Get file size and add to total
             if (std::find(std::begin(extensions), std::end(extensions), x.path().extension().string()) !=
                 std::end(extensions)) {                 //If file is a C++ source code file
                 cur_file.check_file();                  //Check how many SLOC and CLOC there are
+                total_sloc += cur_file.return_sloc();
+                total_cloc += cur_file.return_cloc();
             }
             files.push_back(cur_file);
         }
@@ -51,6 +55,8 @@ void DirectoryTree::parse_property_tree(pt::ptree &root, bool isfirst) {
     if (!isfirst) {
         root.add("directory", dirname);     //Only add directory if the folder is not the root dir of the project (project name was added already)
         root.add("size", dirsize);
+        root.add("total_sloc", total_sloc);
+        root.add("total_cloc", total_cloc);
     }
     pt::ptree files_node;
     for (auto file : files) {
@@ -80,7 +86,7 @@ void DirectoryTree::parse_property_tree(pt::ptree &root, bool isfirst) {
     }
 }
 
-void DirectoryTree::add_history(pt::ptree &root, std::string project) {
+void DirectoryTree::add_history(pt::ptree &root, std::string project, std::string version) {
     fs::path json_dir(project);
     std::vector<fs::path> files;
     for (fs::directory_entry &x : fs::directory_iterator(json_dir)) {
@@ -98,9 +104,10 @@ void DirectoryTree::add_history(pt::ptree &root, std::string project) {
         fs::path file(files.back().relative_path());    //Get newest JSON file found
         pt::ptree history;
         pt::read_json(file.string(), history);      //Read data from the JSON file
-        for (auto& val : history.get_child("history.")) {                   //Get each element of history array
+        for (auto &val : history.get_child("history.")) {                   //Get each element of history array
             pt::ptree old_node;
-            old_node.add("size", val.second.get_child("size").data());  //Get data of size field
+            old_node.add("size", val.second.get_child("size").data());          //Get data of size field
+            old_node.add("version", val.second.get_child("version").data());    //Get data of version field
             history_node.push_back(std::make_pair("", old_node));     //Put in the new property tree
         }
     } else {
@@ -108,6 +115,7 @@ void DirectoryTree::add_history(pt::ptree &root, std::string project) {
     }
     pt::ptree new_node;
     new_node.put("size", this->dirsize);        //Put current size
+    new_node.put("version", version);          //Put current version
     history_node.push_back(std::make_pair("", new_node));
     root.add_child("history", history_node);
 }
@@ -115,4 +123,12 @@ void DirectoryTree::add_history(pt::ptree &root, std::string project) {
 
 unsigned long long DirectoryTree::return_dirsize() {
     return this->dirsize;
+}
+
+unsigned long long DirectoryTree::return_total_sloc() {
+    return this->total_sloc;
+}
+
+unsigned long long DirectoryTree::return_total_cloc() {
+    return this->total_cloc;
 }
