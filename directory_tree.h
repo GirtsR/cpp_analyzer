@@ -51,8 +51,10 @@ public:
     /**
      * Add size of previous file versions from the previous .json files
      * @param root - reference to Property tree root
+     * @param project - name of project passed by the user
+     * @param version - project version passed by the user
      */
-    void add_history(pt::ptree &root, std::string project);
+    void add_history(pt::ptree &root, std::string project, std::string version);
 
     unsigned long long return_dirsize();
 
