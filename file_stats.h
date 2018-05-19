@@ -53,7 +53,7 @@ public:
     /**
      * Check if the comment symbol is within a string literal
      * @param line - current line with trimmed whitespaces
-     * @param symbol - symbol that needs to be checked ("//" or "/*")
+     * @param symbol - symbol that needs to be checked
      * @param quote - quote style
      * @return returns true if the comment symbol is in a string literal
      */
