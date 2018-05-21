@@ -19,14 +19,14 @@ DirectoryTree::~DirectoryTree() {
 void DirectoryTree::iterate() {
     for (fs::directory_entry &x : fs::directory_iterator(dirpath)) {
         if (is_directory(x.path()) && x.path().filename().string()[0] != '.') {
-            std::cout << "Folder " << x.path() << std::endl;
+            std::cout << "Found directory: " << x.path() << std::endl;
             DirectoryTree subdir(x.path());
             subdirectories.push_back(subdir);
             dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
             total_sloc += subdir.return_total_sloc();
             total_cloc += subdir.return_total_cloc();
         } else if (is_regular_file(x.path()) && x.path().filename().string()[0] != '.') {  //File found which is not hidden
-            std::cout << "File: " << x.path() << std::endl;
+            std::cout << "Found file: " << x.path() << std::endl;
             FileStats cur_file(x.path().string());
             dirsize += cur_file.get_size();             //Get file size and add to total
             if (std::find(std::begin(extensions), std::end(extensions), x.path().extension().string()) !=
@@ -88,20 +88,17 @@ void DirectoryTree::parse_property_tree(pt::ptree &root, bool isfirst) {
 
 void DirectoryTree::add_history(pt::ptree &root, std::string project, std::string version) {
     fs::path json_dir(project);
-    std::vector<fs::path> files;
-    for (fs::directory_entry &x : fs::directory_iterator(json_dir)) {
+    fs::path file;
+    bool found_json = false;
+    for (fs::directory_entry &x : fs::directory_iterator(json_dir)) {       // Check if project dir contains a [project].json file
         if (is_regular_file(x.path()) && x.path().extension().string() == ".json") {
-            fs::path file(x.path());
+            file = x.path();
             std::cout << "Found JSON file: " << file.filename() << std::endl;
-            files.push_back(file);                  //Add all old JSON files to vector
+            found_json = true; // File found
         }
-        std::sort(files.begin(), files.end());      //Sort by filename
     }
     pt::ptree history_node;
-    std::cout << files.size() << std::endl;
-    if (!files.empty()) {
-        std::cout << "Latest JSON file: " << files.back() << std::endl;
-        fs::path file(files.back().relative_path());    //Get newest JSON file found
+    if (!found_json) {
         pt::ptree history;
         pt::read_json(file.string(), history);      //Read data from the JSON file
         for (auto &val : history.get_child("history.")) {                   //Get each element of history array

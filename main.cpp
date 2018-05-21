@@ -2,16 +2,22 @@
 // Created by Girts Rudziss on 14/03/2018.
 //
 #include "directory_tree.h"
-#include <boost/date_time.hpp>
 #include "html_generator.h"
 
 namespace fs=boost::filesystem;
 namespace pt=boost::property_tree;
-namespace dt=boost::posix_time;
 
 int main(int argc, char *argv[]) {
 
     if (argc < 4) {
+        if (argc == 1) {
+            std::cout << "No project name was specified" << std::endl;
+        } else if (argc == 2) {
+            std::cout << "No root directory for the project was specified" << std::endl;
+        }
+        else if (argc == 3) {
+            std::cout << "No project version specified" << std::endl;
+        }
         std::cout << "Usage: ./analyzer [Project name] [Path to project root] [Project version]" << std::endl;
         return 1;
     }
@@ -20,55 +26,40 @@ int main(int argc, char *argv[]) {
     fs::path p(argv[2]);
     std::string version = argv[3];
 
-    if (exists(p)) {
-        if (is_regular_file(p)) {
-            std::cout << "Path to project is a file: " << p << ", not a directory" << std::endl;
-            return 1;
-        } else if (is_directory(p)) {
-            std::cout << p << " is a directory containing:\n";
-            DirectoryTree tree(p);
-            //tree.print_tree("");
+    if (exists(p) && is_directory(p)) {
+        std::cout << "Tool for static analysis of C++ files has started successfully for the project:" + project << std::endl;
 
-            dt::ptime curTime = dt::second_clock::local_time();
-            std::string time = dt::to_iso_string(curTime);
-            std::string filename = project + ".json";
+        DirectoryTree tree(p);        // Start iterating through the project directories
 
-            //TODO - check for exceptions and errors
-            fs::path folder = project;
-            if (!fs::exists(folder)) {
-                if (fs::create_directory(folder)) {
-                    std::cout << "Folder " << folder << " created successfully!" << std::endl;
-                } else {
-                    std::cout << "Folder could not be created! Please check the project name specified is valid"
-                            " or if administrator privileges are needed" << std::endl;
-                    return 1;
-                }
-            } else std::cout << "Folder " << folder << " exists already, no need to create" << std::endl;
+        std::string filename = project + ".json";
 
-            pt::ptree root;
-            root.put("project", project);
-            root.put("version", version);
-            root.put("totalsize", tree.return_dirsize());
-            root.add("totalsloc", tree.return_total_sloc());
-            root.add("totalcloc", tree.return_total_cloc());
-            root.put("unit", "bytes");
-            std::cout << "Starting JSON parse" << std::endl;
-            tree.parse_property_tree(root, true);
-            tree.add_history(root, project, version);
-            pt::write_json("./" + project + "/" + filename, root);
-            std::cout << "JSON parse finished! Output file: " << filename << std::endl;
-            // std::cout << "XML output" << std::endl;
-            // pt::write_xml(std::cout, root, pt::xml_writer_make_settings<pt::ptree::key_type>(' ', 4));
+        fs::path folder = project;
+        if (!fs::exists(folder)) {
+            if (fs::create_directory(folder)) {
+                std::cout << "Folder " << folder << " created successfully!" << std::endl;
+            } else {
+                std::cout << "Folder could not be created! Please check the project name specified is valid"
+                    " or if administrator privileges are needed" << std::endl;
+                return 1;
+            }
+        } else std::cout << "Folder " << folder << " exists already, no need to create" << std::endl;
 
-            //TODO - generate report using root property tree
-            generate_report(root, project);
-        } else {
-            std::cout << p << " exists, but is not a regular file or directory" << std::endl;
-            return 1;
-        }
+        pt::ptree root;
+        root.put("project", project);
+        root.put("version", version);
+        root.put("totalsize", tree.return_dirsize());
+        root.add("totalsloc", tree.return_total_sloc());
+        root.add("totalcloc", tree.return_total_cloc());
+        root.put("unit", "bytes");
+        std::cout << "Starting JSON parse" << std::endl;
+        tree.parse_property_tree(root, true);
+        tree.add_history(root, project, version);
+        pt::write_json("./" + project + "/" + filename, root);
+        std::cout << "JSON parse finished! Output file: " << filename << std::endl;
 
+        generate_report(root, project);
     } else {
-        std::cout << p << " does not exist" << std::endl;
+        std::cout << "Path to the root directory is invalid" << std::endl;
         return 1;
     }
     return 0;
