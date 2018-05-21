@@ -54,6 +54,7 @@ public:
      * @param project - name of project passed by the user
      * @param version - project version passed by the user
      */
+//TODO - change to get_history to comply with PPA
     void add_history(pt::ptree &root, std::string project, std::string version);
 
     unsigned long long return_dirsize();
