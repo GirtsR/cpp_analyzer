@@ -103,16 +103,20 @@ void DirectoryTree::add_history(pt::ptree &root, std::string project, std::strin
         pt::read_json(file.string(), history);      //Read data from the JSON file
         for (auto &val : history.get_child("history.")) {                   //Get each element of history array
             pt::ptree old_node;
-            old_node.add("size", val.second.get_child("size").data());          //Get data of size field
             old_node.add("version", val.second.get_child("version").data());    //Get data of version field
+            old_node.add("size", val.second.get_child("size").data());          //Get data of size field
+            old_node.add("sloc", val.second.get_child("sloc").data());          //Get data of sloc field
+            old_node.add("cloc", val.second.get_child("cloc").data());          //Get data of cloc field
             history_node.push_back(std::make_pair("", old_node));     //Put in the new property tree
         }
     } else {
         std::cout << "No project history found" << std::endl;
     }
     pt::ptree new_node;
-    new_node.put("size", this->dirsize);        //Put current size
     new_node.put("version", version);          //Put current version
+    new_node.put("size", this->dirsize);        //Put current size
+    new_node.put("sloc", this->total_sloc);        //Put current sloc count
+    new_node.put("cloc", this->total_cloc);        //Put current cloc count
     history_node.push_back(std::make_pair("", new_node));
     root.add_child("history", history_node);
 }
