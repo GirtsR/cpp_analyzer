@@ -5,10 +5,10 @@
 
 namespace pt=boost::property_tree;
 // Quick and dirty method of generating HTML (see example HTML and Javascript files for normal syntax)
-void generate_report(pt::ptree &root) {
+void generate_report(pt::ptree &root, std::string project) {
   std::stringstream json;
   pt::json_parser::write_json(json, root);
-  std::ofstream output("test.html");
+  std::ofstream output(project + "/" + project + ".html");
   output << "<!DOCTYPE html>\n"
       "<html lang=\"en\">\n"
       "<head>\n"
@@ -203,7 +203,8 @@ void generate_report(pt::ptree &root) {
       "      // var barHeight = (maxHeight * value / maxValue);\n"
       "\n"
       "      // 2nd - height relative to max and min\n"
-      "      var barHeight = minHeight + ((maxHeight - minHeight) * (value - minValue) / (maxValue - minValue));\n"
+      "      if (minValue === maxValue) var barHeight = maxHeight;\n"
+      "      else var barHeight = minHeight + ((maxHeight - minHeight) * (value - minValue) / (maxValue - minValue));\n"
       "\n"
       "      drawBar(\n"
       "        this.ctx,\n"

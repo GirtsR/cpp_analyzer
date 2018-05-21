@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 
             dt::ptime curTime = dt::second_clock::local_time();
             std::string time = dt::to_iso_string(curTime);
-            std::string filename = project + "-" + time + ".json";
+            std::string filename = project + ".json";
 
             //TODO - check for exceptions and errors
             fs::path folder = project;
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
             // pt::write_xml(std::cout, root, pt::xml_writer_make_settings<pt::ptree::key_type>(' ', 4));
 
             //TODO - generate report using root property tree
-            generate_report(root);
+            generate_report(root, project);
         } else {
             std::cout << p << " exists, but is not a regular file or directory" << std::endl;
             return 1;

@@ -9,6 +9,6 @@ namespace pt=boost::property_tree;
 #ifndef ANALYZER_HTML_GENERATOR_H
 #define ANALYZER_HTML_GENERATOR_H
 
-void generate_report(pt::ptree &root);
+void generate_report(pt::ptree &root, std::string project);
 
 #endif //ANALYZER_HTML_GENERATOR_H
