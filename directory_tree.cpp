@@ -18,14 +18,14 @@ DirectoryTree::~DirectoryTree() {
 
 void DirectoryTree::iterate() {
     for (fs::directory_entry &x : fs::directory_iterator(dirpath)) {
-        if (is_directory(x.path()) && x.path().filename().string()[0] != '.') {
+        if (is_directory(x.path())) {
             std::cout << "Folder " << x.path() << std::endl;
             DirectoryTree subdir(x.path());
             subdirectories.push_back(subdir);
             dirsize += subdir.return_dirsize();     //Add subdirectory size to upper dir size
             total_sloc += subdir.return_total_sloc();
             total_cloc += subdir.return_total_cloc();
-        } else if (is_regular_file(x.path()) && x.path().filename().string()[0] != '.') {  //File found which is not hidden
+        } else if (is_regular_file(x.path())) {  //File found which is not hidden
             std::cout << "File: " << x.path() << std::endl;
             FileStats cur_file(x.path().string());
             dirsize += cur_file.get_size();             //Get file size and add to total
