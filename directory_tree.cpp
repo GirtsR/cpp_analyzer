@@ -98,7 +98,7 @@ void DirectoryTree::add_history(pt::ptree &root, std::string project, std::strin
         }
     }
     pt::ptree history_node;
-    if (!found_json) {
+    if (found_json) {
         pt::ptree history;
         pt::read_json(file.string(), history);      //Read data from the JSON file
         for (auto &val : history.get_child("history.")) {                   //Get each element of history array
