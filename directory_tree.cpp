@@ -18,7 +18,7 @@ DirectoryTree::~DirectoryTree() {
 
 void DirectoryTree::iterate() {
     for (fs::directory_entry &x : fs::directory_iterator(dirpath)) {
-        if (is_directory(x.path())) {
+        if (is_directory(x.path()) && x.path().filename().string()[0] != '.') {
             std::cout << "Folder " << x.path() << std::endl;
             DirectoryTree subdir(x.path());
             subdirectories.push_back(subdir);
