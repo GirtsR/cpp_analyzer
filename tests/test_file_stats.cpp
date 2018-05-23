@@ -6,10 +6,10 @@
 
 #include <boost/test/unit_test.hpp>
 #include "../file_stats.h"
+#include <chrono>
 namespace fs = boost::filesystem;
 
-BOOST_AUTO_TEST_CASE(empty_file)
-{
+BOOST_AUTO_TEST_CASE(empty_file) {
     FileStats file(fs::path("../tests/testdir/empty.cpp"));
     file.get_size();
     file.check_file();
@@ -20,8 +20,7 @@ BOOST_AUTO_TEST_CASE(empty_file)
     BOOST_CHECK_EQUAL(file.return_cloc(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(mixed_file)
-{
+BOOST_AUTO_TEST_CASE(mixed_file) {
     FileStats file(fs::path("../tests/testdir/aaa/mixed_file.cpp"));
     file.get_size();
     file.check_file();
@@ -32,8 +31,7 @@ BOOST_AUTO_TEST_CASE(mixed_file)
     BOOST_CHECK_EQUAL(file.return_cloc(), 7);
 }
 
-BOOST_AUTO_TEST_CASE(source_only)
-{
+BOOST_AUTO_TEST_CASE(source_only) {
     FileStats file(fs::path("../tests/testdir/aaa/bbb/source_only.cpp"));
     file.get_size();
     file.check_file();
@@ -44,8 +42,7 @@ BOOST_AUTO_TEST_CASE(source_only)
     BOOST_CHECK_EQUAL(file.return_cloc(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(comment_only)
-{
+BOOST_AUTO_TEST_CASE(comment_only) {
     FileStats file(fs::path("../tests/testdir/aaa/ccc/comment_only.cpp"));
     file.get_size();
     file.check_file();
@@ -56,8 +53,7 @@ BOOST_AUTO_TEST_CASE(comment_only)
     BOOST_CHECK_EQUAL(file.return_cloc(), 6);
 }
 
-BOOST_AUTO_TEST_CASE(large_file)
-{
+BOOST_AUTO_TEST_CASE(large_file) {
     FileStats file(fs::path("../tests/testdir/large_file.cpp"));
     file.get_size();
     file.check_file();
@@ -68,8 +64,7 @@ BOOST_AUTO_TEST_CASE(large_file)
     BOOST_CHECK_EQUAL(file.return_cloc(), 701);
 }
 
-BOOST_AUTO_TEST_CASE(filename_special_chars)
-{
+BOOST_AUTO_TEST_CASE(filename_special_chars) {
     FileStats file(fs::path("../tests/testdir/test-#!@£$%^&*()_+\":;'.h"));
     file.get_size();
     file.check_file();
@@ -80,7 +75,42 @@ BOOST_AUTO_TEST_CASE(filename_special_chars)
     BOOST_CHECK_EQUAL(file.return_cloc(), 3);
 }
 
-BOOST_AUTO_TEST_CASE(could_not_open_exception)
-{
+BOOST_AUTO_TEST_CASE(could_not_open_exception) {
     BOOST_CHECK_THROW(FileStats file(fs::path("")), std::runtime_error);        //Checks if runtime error is thrown in the constructor
+}
+
+BOOST_AUTO_TEST_CASE(performance_100_files) {
+    auto start = std::chrono::system_clock::now();
+    for (int i = 0; i < 100; i++) {
+        FileStats file(fs::path("../tests/100_lines.cpp"));
+        file.get_size();
+        file.check_file();
+
+        BOOST_CHECK_EQUAL(file.return_filename(), "100_lines.cpp");
+        BOOST_CHECK_EQUAL(file.return_size(), 2260);
+        BOOST_CHECK_EQUAL(file.return_sloc(), 43);
+        BOOST_CHECK_EQUAL(file.return_cloc(), 44);
+    }
+    auto end = std::chrono::system_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << duration << std::endl;
+    BOOST_CHECK_LT(duration, 500);
+}
+
+BOOST_AUTO_TEST_CASE(performance_1000_lines) {
+    auto start = std::chrono::system_clock::now();
+
+    FileStats file(fs::path("../tests/1000_lines.cpp"));
+    file.get_size();
+    file.check_file();
+
+    BOOST_CHECK_EQUAL(file.return_filename(), "1000_lines.cpp");
+    BOOST_CHECK_EQUAL(file.return_size(), 22212);
+    BOOST_CHECK_EQUAL(file.return_sloc(), 435);
+    BOOST_CHECK_EQUAL(file.return_cloc(), 439);
+
+    auto end = std::chrono::system_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << duration << std::endl;
+    BOOST_CHECK_LT(duration, 200);
 }
