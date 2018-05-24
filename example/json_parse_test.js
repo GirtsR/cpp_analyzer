@@ -15,27 +15,28 @@ $.getJSON("Test.json", function (json) {
       var cloc_diff = parseInt(curr["cloc"] - prev["cloc"]);
   }
   var totals_text;
-  totals_text = "<ul><li>Version: " + json["version"] + "</li>";
-  totals_text += "<li>Total size: " + (json["totalsize"] / 1024).toFixed(2) + " kilobytes";
+  totals_text = "<tbody><tr><td>Version: </td>" + "<td>" + json["version"] + "</td></tr>";
+  totals_text += "<tr><td>Total size: </td>" + "<td>" + (json["totalsize"] / 1024).toFixed(2) + " KB";
   if (size_diff) {
-    if (size_diff > 0) totals_text += " (Change: +" + (size_diff / 1024).toFixed(2) + " kilobytes)";
-    else totals_text += " (Change: " + (size_diff / 1024).toFixed(2) + " kilobytes)";
+    if (size_diff > 0) totals_text += " (Change: +" + (size_diff / 1024).toFixed(2) + " KB)";
+    else totals_text += " (Change: " + (size_diff / 1024).toFixed(2) + " KB)";
   }
-    totals_text += "</li><li>Total source lines of code: " + json["totalsloc"];
+    totals_text += "</td></tr><tr><td>Total source lines of code: </td>" + "<td>" + json["totalsloc"];
   if (sloc_diff) {
     if (sloc_diff > 0) totals_text += " (Change: +" + sloc_diff + " lines)";
     else totals_text += " (Change: " + sloc_diff + " lines)";
   }
-  totals_text +=  "</li><li>Total comment lines of code: " + json["totalcloc"];
+  totals_text +=  "</td></tr><tr><td>Total comment lines of code: </td>" + "<td>" + json["totalcloc"];
   if (cloc_diff) {
     if (cloc_diff > 0) totals_text += " (Change: +" + cloc_diff + " lines)";
     else totals_text += " (Change: " + cloc_diff + " lines)";
   }
-  totals_text += "</li></ul>";
+  totals_text += "</td></tr></tbody>";
   totals.innerHTML = totals_text;
   add_history(history);
   var breakdown = document.getElementById("breakdown");
   var breakdown_list = document.createElement("ul");
+  breakdown_list.className = "list-group";
   breakdown.appendChild(breakdown_list);
   iterate(json, breakdown_list);
 });
@@ -59,6 +60,7 @@ function iterate(object, list) {
 function append_file(file, list) {
   console.log(file);
   var element = document.createElement("li");
+  element.className = "list-group-item";
   element.innerHTML = "File: " + file.filename;   //Add filename
   $(element).hover(function() {
     $(this).css('cursor','pointer');          //Set cursor to pointer on hover
@@ -85,6 +87,8 @@ function append_file(file, list) {
 
 function append_subdir(directory, list) {
   var element = document.createElement("li");
+  element.className = "list-group-item";
+  element.style.zIndex = 10;  // Move subdirectory element in front to avoid glitched lines
   element.innerHTML = "<strong>Subdirectory: " + directory["directory"] + "</strong> (Size of files in this directory: " + directory["size"] + " bytes)";
   $(element).hover(function() {
     $(this).css('cursor','pointer');    //Set cursor to pointer on hover
@@ -94,12 +98,13 @@ function append_subdir(directory, list) {
   list.appendChild(element);
   var sublist_div = document.createElement("div");
   var sublist = document.createElement("ul");       //New list for files and subdirs in this directory
+  sublist.className = "list-group-flush";
   list.appendChild(sublist_div);
   sublist_div.appendChild(sublist);
   iterate(directory, sublist);
   $(sublist_div).children().hide();       //Hide subdirs by default
   $(element).click(function() {
-    $(sublist_div).children().toggle(500); //Show or hide file stats when direcory name is clicked
+    $(sublist_div).children().toggle(500); //Show or hide subdirectory contents when directory name is clicked
   });
 };
 

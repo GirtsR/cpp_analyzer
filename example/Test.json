@@ -1,6 +1,6 @@
 {
     "project": "Test",
-    "version": "lol",
+    "version": "3.5.6",
     "totalsize": "36130",
     "totalsloc": "708",
     "totalcloc": "717",
@@ -76,6 +76,294 @@
         }
     ],
     "history": [
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
         {
             "version": "1.5.0",
             "size": "12",
