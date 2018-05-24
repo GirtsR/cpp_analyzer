@@ -1,0 +1,104 @@
+{
+    "project": "Test",
+    "version": "lol",
+    "totalsize": "36130",
+    "totalsloc": "708",
+    "totalcloc": "717",
+    "unit": "bytes",
+    "files": [
+        {
+            "filename": "empty.cpp",
+            "size": "0"
+        },
+        {
+            "filename": "large_file.cpp",
+            "size": "35697",
+            "source_loc": "700",
+            "comment_loc": "701"
+        },
+        {
+            "filename": "test-#!@£$%^&*()_+\":;'.h",
+            "size": "49",
+            "source_loc": "0",
+            "comment_loc": "3"
+        }
+    ],
+    "subdirectories": [
+        {
+            "directory": "emptyfolder",
+            "size": "0",
+            "total_sloc": "0",
+            "total_cloc": "0"
+        },
+        {
+            "directory": "aaa",
+            "size": "384",
+            "total_sloc": "8",
+            "total_cloc": "13",
+            "files": [
+                {
+                    "filename": "mixed_file.cpp",
+                    "size": "354",
+                    "source_loc": "7",
+                    "comment_loc": "7"
+                }
+            ],
+            "subdirectories": [
+                {
+                    "directory": "bbb",
+                    "size": "12",
+                    "total_sloc": "1",
+                    "total_cloc": "0",
+                    "files": [
+                        {
+                            "filename": "source_only.cpp",
+                            "size": "12",
+                            "source_loc": "1",
+                            "comment_loc": "0"
+                        }
+                    ]
+                },
+                {
+                    "directory": "ccc",
+                    "size": "18",
+                    "total_sloc": "0",
+                    "total_cloc": "6",
+                    "files": [
+                        {
+                            "filename": "comment_only.cpp",
+                            "size": "18",
+                            "source_loc": "0",
+                            "comment_loc": "6"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "history": [
+        {
+            "version": "1.5.0",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        },
+        {
+            "version": "2.0.1",
+            "size": "12",
+            "sloc": "1",
+            "cloc": "0"
+        },
+        {
+            "version": "3.5.6",
+            "size": "36130",
+            "sloc": "708",
+            "cloc": "717"
+        }
+    ]
+}
