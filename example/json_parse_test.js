@@ -1,6 +1,7 @@
 //The JSON file needs to be read as a variable in the final file that will be generated in C++
 $.getJSON("Test.json", function (json) {
 //  $(document).ready(function() {
+  // Icons used from https://github.com/danklammer/bytesize-icons
   var info = document.getElementById("info");
   var title = document.getElementById(("title"));
   title.innerHTML = "Analyzer tool";
@@ -61,7 +62,7 @@ function append_file(file, list) {
   console.log(file);
   var element = document.createElement("li");
   element.className = "list-group-item";
-  element.innerHTML = "File: " + file.filename;   //Add filename
+  element.innerHTML = file.filename;   //Add filename
   $(element).hover(function() {
     $(this).css('cursor','pointer');          //Set cursor to pointer on hover
   }, function() {
@@ -69,6 +70,10 @@ function append_file(file, list) {
   });
   list.appendChild(element);
 
+  $(element).prepend("<svg id=\"i-file\" style='padding-bottom: 4px; margin-right: 8px' class='align-middle' viewBox=\"0 0 32 32\" " +
+    "width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\">\n" +
+    "    <path d=\"M6 2 L6 30 26 30 26 10 18 2 Z M18 2 L18 10 26 10\" />\n" +
+    "</svg>");
   var stats = document.createElement("ul");
   if (file.source_loc !== undefined) {
     stats.innerHTML = "Size: " + file.size +
@@ -89,13 +94,19 @@ function append_subdir(directory, list) {
   var element = document.createElement("li");
   element.className = "list-group-item";
   element.style.zIndex = 10;  // Move subdirectory element in front to avoid glitched lines
-  element.innerHTML = "<strong>Subdirectory: " + directory["directory"] + "</strong> (Size of files in this directory: " + directory["size"] + " bytes)";
+  element.innerHTML = "<strong>" + directory["directory"] + "</strong> (Size of files in this directory: " + directory["size"] + " bytes)";
   $(element).hover(function() {
     $(this).css('cursor','pointer');    //Set cursor to pointer on hover
   }, function() {
     $(this).css('cursor','auto');
   });
   list.appendChild(element);
+
+  $(element).prepend("<svg id=\"i-folder\" style='padding-bottom: 4px; margin-right: 10px' class='align-middle' viewBox=\"0 0 32 32\" " +
+    "width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\">\n" +
+    "    <path d=\"M2 26 L30 26 30 7 14 7 10 4 2 4 Z M30 12 L2 12\" />\n" +
+    "</svg>");
+
   var sublist_div = document.createElement("div");
   var sublist = document.createElement("ul");       //New list for files and subdirs in this directory
   sublist.className = "list-group-flush";
@@ -105,6 +116,18 @@ function append_subdir(directory, list) {
   $(sublist_div).children().hide();       //Hide subdirs by default
   $(element).click(function() {
     $(sublist_div).children().toggle(500); //Show or hide subdirectory contents when directory name is clicked
+    if ($(element).children("#i-folder").length !== 0) {    //If a closed folder icon is found
+      $(element).children("#i-folder").replaceWith("<svg id=\"i-folder-open\" style='padding-bottom: 4px; margin-right: 10px' class='align-middle' viewBox=\"0 0 32 32\" " +
+        "width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\">\n" +
+        "    <path d=\"M4 28 L28 28 30 12 14 12 10 8 2 8 Z M28 12 L28 4 4 4 4 8\" />\n" +
+        "</svg>");
+    }
+    else {
+      $(element).children("#i-folder-open").replaceWith("<svg id=\"i-folder\" style='padding-bottom: 4px; margin-right: 10px' class='align-middle' viewBox=\"0 0 32 32\" " +
+        "width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\">\n" +
+        "    <path d=\"M2 26 L30 26 30 7 14 7 10 4 2 4 Z M30 12 L2 12\" />\n" +
+        "</svg>");
+    }
   });
 };
 
