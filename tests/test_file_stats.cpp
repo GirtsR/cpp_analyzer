@@ -79,6 +79,17 @@ BOOST_AUTO_TEST_CASE(could_not_open_exception) {
     BOOST_CHECK_THROW(FileStats file(fs::path("")), std::runtime_error);        //Checks if runtime error is thrown in the constructor
 }
 
+BOOST_AUTO_TEST_CASE(one_line) {
+    FileStats file(fs::path("../tests/one_line.h"));
+    file.get_size();
+    file.check_file();
+
+    BOOST_CHECK_EQUAL(file.return_filename(), "one_line.h");
+    BOOST_CHECK_EQUAL(file.return_size(), 97);
+    BOOST_CHECK_EQUAL(file.return_sloc(), 1);
+    BOOST_CHECK_EQUAL(file.return_cloc(), 1);
+}
+
 BOOST_AUTO_TEST_CASE(performance_100_files) {
     auto start = std::chrono::system_clock::now();
     for (int i = 0; i < 100; i++) {
@@ -93,7 +104,7 @@ BOOST_AUTO_TEST_CASE(performance_100_files) {
     }
     auto end = std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    std::cout << duration << std::endl;
+    std::cout << "Duration: " << duration << " milliseconds" << std::endl;
     BOOST_CHECK_LT(duration, 500);
 }
 
@@ -111,6 +122,6 @@ BOOST_AUTO_TEST_CASE(performance_1000_lines) {
 
     auto end = std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    std::cout << duration << std::endl;
+    std::cout << "Duration: " << duration << " milliseconds" << std::endl;
     BOOST_CHECK_LT(duration, 200);
 }

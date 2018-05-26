@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
             }
         } else std::cout << "Folder " << folder << " exists already, no need to create" << std::endl;
 
-        pt::ptree root;
+        pt::ptree root;                 //Construct Boost.PropertyTree object
         root.put("project", project);
         root.put("version", version);
         root.put("totalsize", tree.return_dirsize());

@@ -20,7 +20,7 @@ FileStats::~FileStats() {
     }
 }
 
-long long FileStats::get_size() {
+unsigned long long FileStats::get_size() {
     file->seekg(0, std::ios::end);       //Seek to the end of the file
     size = file->tellg();                //Converts size to offset of file end from the start of the file
     file->seekg(0);                      //Seek back to the beginning
@@ -58,7 +58,6 @@ void FileStats::multi_line_c(std::string &line) {
             getline(*file, line);
             trim_line(line);
         } else return;
-
     }
     if (line.find("*/") != line.size() - 2) {          // If the line does not end with "*/" - more code or comments are present in the line
         if (is_one_line) {                               //Special case to check if a c-style comment is before or between code
@@ -78,7 +77,6 @@ void FileStats::multi_line_c(std::string &line) {
 
                 } else source_loc--;                  //2 code blocks (e.g. "code /* comment */ code") found - should count as one source line of code
             }
-
         } else {
             std::string part2 = line.substr(line.find("*/") + 2);
             if (part2.find("//") != std::string::npos || part2.find("/*") != std::string::npos) {
@@ -114,7 +112,7 @@ bool FileStats::is_in_string(std::string line, std::string symbol, char quote) {
             for (int i = 0; i < line.size(); i++) {
                 if (line[i] == quote) {
                     if (line[i - 1] != '\\') count++;
-                    if (pos1 == i) {                   //Symbol is in a string literal if pos1 count % 2 == 1 and pos2 count % 2 == 0
+                    if (pos1 == i) {                   //Symbol is in a string literal if pos1 count % 2 == 1 or pos2 count % 2 == 0
                         if (count % 2 != 1) {
                             between = false;
                             break;
@@ -136,7 +134,6 @@ bool FileStats::is_in_string(std::string line, std::string symbol, char quote) {
 
 void FileStats::check_line(std::string &line) {
     trim_line(line);
-    //std::cout << line << std::endl;
     if (line.find("//") == std::string::npos &&
         line.find("/*") == std::string::npos) {      //Line does not contain any comment (is a source code line)
         source_loc++;
@@ -158,7 +155,7 @@ void FileStats::check_line(std::string &line) {
         size_t c_pos = line.find("/*");
         if (is_in_string(line, "//", '\"') && is_in_string(line, "/*", '\"')) {   //Both symbols are in string literals
             if (c_pos < cpp_pos) {
-                line = line.substr(line.find('\"', c_pos + 1) + 1);
+                line = line.substr(line.find('\"', c_pos + 1) + 1);     //Substract starting from the last symbol gound
             } else line = line.substr(line.find('\"', cpp_pos + 1) + 1);
         } else if (is_in_string(line, "//", '\"')) {                //Only "//" is in a string literal
             line = line.substr(line.find('\"', cpp_pos + 1) + 1);

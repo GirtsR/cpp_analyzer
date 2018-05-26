@@ -58,6 +58,6 @@ BOOST_AUTO_TEST_CASE(performance_50_subdirs) {
     }
     auto end = std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    std::cout << duration << std::endl;
+    std::cout << "Duration: " << duration << " milliseconds" << std::endl;
     BOOST_CHECK_LT(duration, 300);
 }

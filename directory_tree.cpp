@@ -18,7 +18,7 @@ DirectoryTree::~DirectoryTree() {
 
 void DirectoryTree::iterate() {
     for (fs::directory_entry &x : fs::directory_iterator(dirpath)) {
-        if (is_directory(x.path()) && x.path().filename().string()[0] != '.') {
+        if (is_directory(x.path()) && x.path().filename().string()[0] != '.') { //Directory found which is not hidden
             std::cout << "Found directory: " << x.path() << std::endl;
             DirectoryTree subdir(x.path());
             subdirectories.push_back(subdir);
@@ -53,7 +53,7 @@ void DirectoryTree::print_tree(std::string tabs) {
 
 void DirectoryTree::parse_property_tree(pt::ptree &root, bool isfirst) {
     if (!isfirst) {
-        root.add("directory", dirname);     //Only add directory if the folder is not the root dir of the project (project name was added already)
+        root.add("directory", dirname);     //Only add directory if the folder is not the root dir of the project (project data was added already)
         root.add("size", dirsize);
         root.add("total_sloc", total_sloc);
         root.add("total_cloc", total_cloc);
