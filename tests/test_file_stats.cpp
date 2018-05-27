@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(one_line) {
     file.check_file();
 
     BOOST_CHECK_EQUAL(file.return_filename(), "one_line.h");
-    BOOST_CHECK_EQUAL(file.return_size(), 97);
+    BOOST_CHECK_EQUAL(file.return_size(), 506);
     BOOST_CHECK_EQUAL(file.return_sloc(), 1);
     BOOST_CHECK_EQUAL(file.return_cloc(), 1);
 }

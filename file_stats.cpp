@@ -72,10 +72,12 @@ void FileStats::multi_line_c(std::string &line) {
                         comment_loc--;
                         source_loc--;            //2 code blocks and 2 or more comment lines found
                     } else {
-                        source_loc--;           //Only 2 or more code blocks found - should count as one
+                        return;         //2 or more code blocks found - should count as one source line of code
+                                        //further current line checking not required
                     }
 
-                } else source_loc--;                  //2 code blocks (e.g. "code /* comment */ code") found - should count as one source line of code
+                } else return;      //2 code blocks (e.g. "code /* comment */ code") found,
+                                    //should count as one source line of code - further current line checking not required
             }
         } else {
             std::string part2 = line.substr(line.find("*/") + 2);
