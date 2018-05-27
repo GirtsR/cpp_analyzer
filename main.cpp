@@ -14,8 +14,7 @@ int main(int argc, char *argv[]) {
             std::cout << "No project name was specified" << std::endl;
         } else if (argc == 2) {
             std::cout << "No root directory for the project was specified" << std::endl;
-        }
-        else if (argc == 3) {
+        } else if (argc == 3) {
             std::cout << "No project version specified" << std::endl;
         }
         std::cout << "Usage: ./analyzer [Project name] [Path to project root] [Project version]" << std::endl;

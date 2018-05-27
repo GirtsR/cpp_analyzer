@@ -104,7 +104,6 @@ bool FileStats::is_in_string(std::string line, std::string symbol, char quote) {
         int pos2 = line.find(quote, sympos);
         if (pos2 > sympos && pos2 != std::string::npos) {           //Symbol is between 2 double quotes
             while (line[pos2 - 1] == '\\') {                    //The previous character before the pos2 quote is \ - double quote is an escaped character
-                size_t test = line.find(quote, pos2 + 2);
                 if (line.find(quote, pos2 + 2) != std::string::npos) {
                     pos2 = line.find(quote, pos2 + 2);
                 } else return false;
@@ -145,11 +144,11 @@ void FileStats::check_line(std::string &line) {
     } else if (line.find("/*") == 0) {              //Line is a C style comment
         multi_line_c(line);
     } else if (line.find("//") != std::string::npos &&
-               !(is_in_string(line, "//", '\"'))) {      //C++ comment found after code
+        !(is_in_string(line, "//", '\"'))) {      //C++ comment found after code
         source_loc++;
         multi_line_cpp(line);
     } else if (line.find("/*") != std::string::npos &&
-               !(is_in_string(line, "/*", '\"'))) {       //C comment found after or between code
+        !(is_in_string(line, "/*", '\"'))) {       //C comment found after or between code
         source_loc++;
         multi_line_c(line);
     } else {                    //Line needs to be subtracted to start after the first string literal and then checked again

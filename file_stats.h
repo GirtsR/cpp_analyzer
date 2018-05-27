@@ -9,7 +9,7 @@ namespace fs=boost::filesystem;
 #ifndef ANALYZER_FILE_STATS_H
 #define ANALYZER_FILE_STATS_H
 
-class FileStats{
+class FileStats {
     std::string filename;
     fs::path filepath;
     std::shared_ptr<std::ifstream> file;
@@ -29,7 +29,7 @@ public:
      * Get size of the current file
      * @return size of the file
      */
-    unsigned long  long get_size();
+    unsigned long long get_size();
 
     /**
      * Trim whitespaces from line

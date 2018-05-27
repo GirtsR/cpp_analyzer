@@ -121,7 +121,6 @@ void DirectoryTree::add_history(pt::ptree &root, std::string project, std::strin
     root.add_child("history", history_node);
 }
 
-
 unsigned long long DirectoryTree::return_dirsize() {
     return this->dirsize;
 }
