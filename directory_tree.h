@@ -49,7 +49,7 @@ public:
     void parse_property_tree(pt::ptree &root, bool isfirst);
 
     /**
-     * Add size of previous file versions from the previous .json files
+     * Add size of previous project versions from the previous .json file
      * @param root - reference to Property tree root
      * @param project - name of project passed by the user
      * @param version - project version passed by the user
