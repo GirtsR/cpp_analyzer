@@ -69,8 +69,8 @@ void FileStats::multi_line_c(std::string &line) {
                     comment_loc--;                  //2 comments or more found in the same line - should count as one comment
                 } else if (part2.find("//") != std::string::npos || part2.find("/*") != std::string::npos) {
                     if (!is_in_string(part2, "/*", '\"') && !is_in_string(part2, "//", '\"')) {     //String literal check
-                        comment_loc--;
-                        source_loc--;            //2 code blocks and 2 or more comment lines found
+                        return;         //2 code blocks and 2 or more comment lines found
+                                        //further current line checking not required
                     } else {
                         return;         //2 or more code blocks found - should count as one source line of code
                                         //further current line checking not required
