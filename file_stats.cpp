@@ -59,6 +59,7 @@ void FileStats::multi_line_c(std::string &line) {
             trim_line(line);
         } else return;
     }
+
     if (line.find("*/") != line.size() - 2) {          // If the line does not end with "*/" - more code or comments are present in the line
         if (is_one_line) {                               //Special case to check if a c-style comment is before or between code
             std::string part1 = line.substr(0, line.find("/*"));         //Get the first part of the line - before the start of the comment

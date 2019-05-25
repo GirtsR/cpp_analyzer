@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 14)
 find_package(Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
 
 add_executable(analyzer main.cpp file_stats.h file_stats.cpp directory_tree.h directory_tree.cpp html_generator.cpp html_generator.h)
+include_directories(analyzer PRIVATE ${Boost_INCLUDE_DIR})
 
 target_link_libraries(analyzer ${Boost_LIBRARIES})
 
