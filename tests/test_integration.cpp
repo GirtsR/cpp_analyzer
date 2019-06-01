@@ -2,7 +2,7 @@
 // Created by Girts Rudziss on 08/05/2018.
 //
 #define BOOST_TEST_DYN_LINK                 //Link to Boost
-#define BOOST_TEST_MODULE "DirectoryTreeTests" //Module name
+#define BOOST_TEST_MODULE "Integration Tests" //Module name
 
 #include <boost/test/unit_test.hpp>
 #include "../directory_tree.h"

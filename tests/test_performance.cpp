@@ -2,7 +2,7 @@
 // Created by Girts Rudziss on 2019-06-01.
 //
 #define BOOST_TEST_DYN_LINK                 //Link to Boost
-#define BOOST_TEST_MODULE "FileStatsTests" //Module name
+#define BOOST_TEST_MODULE "Perfomance Tests" //Module name
 
 #include <boost/test/unit_test.hpp>
 #include "../file_stats.h"
