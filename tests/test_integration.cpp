@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(no_such_dir_exception) {
 
 BOOST_AUTO_TEST_CASE(ccc_dir) {
     DirectoryTree tree(fs::path("../tests/testdir/aaa/ccc"));
-    BOOST_CHECK_EQUAL(tree.return_dirsize(), 18);
+    BOOST_CHECK_EQUAL(tree.return_dirsize(), 19);
     BOOST_CHECK_EQUAL(tree.return_total_sloc(), 0);
     BOOST_CHECK_EQUAL(tree.return_total_cloc(), 6);
 }
