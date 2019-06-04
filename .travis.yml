@@ -10,12 +10,12 @@ addons:
     packages:
       - cmake
       - libboost-all-dev
-      - gcc-7
-      - g++-7
+      - gcc-6
+      - g++-6
 
 before_script:
-  - sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
-  - sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
+  - sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
+  - sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++
 
 script:
   - mkdir build
