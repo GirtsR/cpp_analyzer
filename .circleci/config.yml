@@ -19,16 +19,16 @@ jobs:
           command: 'mkdir build && cd build && cmake .. && make'
       - run:
           name: Running Unit Tests
-          command: './build/unit_tests --logger=JUNIT'
+          command: 'cd build && ./unit_tests --logger=JUNIT'
       - run:
           name: Running Performance Tests
-          command: './build/performance_tests --logger=JUNIT'
+          command: 'cd build && ./performance_tests --logger=JUNIT'
       - run:
           name: Running Integration Tests
-          command: './build/integration_tests --logger=JUNIT'
+          command: 'cd build && ./integration_tests --logger=JUNIT'
       - run:
           name: Running Integration Tests
-          command: './build/analyzer Analyzer_dir .. 1.0.0'
+          command: 'cd build && ./analyzer Analyzer_dir .. 1.0.0'
       - store_artifacts:
           path: build/Master_Test_Suite.xml
           when: always
