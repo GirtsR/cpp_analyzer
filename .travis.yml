@@ -1,0 +1,22 @@
+language: cpp
+compiler: gcc
+
+addons:
+  apt:
+    packages:
+      - cmake
+      - libboost-all-dev
+
+branches:
+  only:
+    - master
+
+script:
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make
+  - ./unit_tests --logger=JUNIT
+  - ./performance_tests --logger=JUNIT
+  - ./integration_tests --logger=JUNIT
+  - ./analyzer Analyzer_dir .. 1.0.0
