@@ -1,15 +1,21 @@
 language: cpp
 compiler: gcc
 
+branches:
+  only:
+    - master
+
 addons:
   apt:
     packages:
       - cmake
       - libboost-all-dev
+      - gcc-7
+      - g++-7
 
-branches:
-  only:
-    - master
+before_script:
+  - sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
+  - sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
 
 script:
   - mkdir build
