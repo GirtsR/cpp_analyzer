@@ -1,0 +1,30 @@
+version: 2.1
+
+general:
+  branches:
+    only:
+      - master
+jobs:
+  build:
+    docker:
+      - image: "ubuntu:latest"
+    steps:
+      - checkout
+      - run:
+          name: Installing dependencies
+          command: 'apt update && apt-get install -y gcc g++ cmake libboost-all-dev'
+      - run:
+          name: Compiling
+          command: 'mkdir build && cd build && cmake .. && make'
+      - run:
+          name: Running Unit Tests
+          command: './build/unit_tests --logger=JUNIT'
+      - run:
+          name: Running Performance Tests
+          command: './build/performance_tests --logger=JUNIT'
+      - run:
+          name: Running Integration Tests
+          command: './build/integration_tests --logger=JUNIT'
+      - run:
+          name: Running Integration Tests
+          command: './build/analyzer Analyzer_dir .. 1.0.0'
