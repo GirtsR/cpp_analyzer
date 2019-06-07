@@ -27,8 +27,11 @@ jobs:
           name: Running Integration Tests
           command: 'cd build && ./integration_tests --logger=JUNIT'
       - run:
-          name: Running Integration Tests
+          name: Running Analyzer tool
           command: 'cd build && ./analyzer Analyzer_dir .. 1.0.0'
+      - store_test_results:
+          path: build/
+          when: always
       - store_artifacts:
-          path: build/Master_Test_Suite.xml
+          path: build/Analyzer_dir/
           when: always
