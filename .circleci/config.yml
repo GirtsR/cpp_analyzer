@@ -34,5 +34,5 @@ jobs:
           when: always
       - store_artifacts:
           path: build/Analyzer_dir/
-          destination: Analyzer
+          destination: Analyzer_artifacts
           when: always
