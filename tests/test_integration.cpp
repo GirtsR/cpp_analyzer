@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(bbb_dir) {
 
 BOOST_AUTO_TEST_CASE(aaa_dir) {
     DirectoryTree tree(fs::path("../tests/testdir/aaa"));
-    BOOST_CHECK_EQUAL(tree.return_dirsize(), 384);
+    BOOST_CHECK_EQUAL(tree.return_dirsize(), 385);
     BOOST_CHECK_EQUAL(tree.return_total_sloc(), 8);
     BOOST_CHECK_EQUAL(tree.return_total_cloc(), 13);
 }
